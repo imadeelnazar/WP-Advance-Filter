@@ -2,23 +2,17 @@ import React from "react";
 
 const ReadOnlyRow = ({ contact, handleEditClick, handleDeleteClick }) => {
   return (
-    <tr>
-      <td>{contact.fullName}</td>
-      <td>{contact.address}</td>
-      <td>{contact.phoneNumber}</td>
-      <td>{contact.email}</td>
-      <td>
-        <button
-          type="button"
-          onClick={(event) => handleEditClick(event, contact)}
-        >
-          Edit
-        </button>
+    <div className="wp-category-form-wrap-static" key={Math.random()}>
+        <div onClick={(event) => handleEditClick(event, contact)}>{contact.fullName}</div>
+        <div onClick={(event) => handleEditClick(event, contact)}>{contact.facetType}</div>
+        <div onClick={(event) => handleEditClick(event, contact)}>{contact.dataSource}</div>
+        <div onClick={(event) => handleEditClick(event, contact)}>{contact.parentTerm}</div>
+      <div>
         <button type="button" onClick={() => handleDeleteClick(contact.id)}>
-          Delete
+          X
         </button>
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 };
 

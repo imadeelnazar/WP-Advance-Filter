@@ -14,8 +14,8 @@ class WPRK_Create_Admin_Page {
         $slug = 'wprk-settings';
 
         add_menu_page(
-            __( 'Cat Index WP', 'category-index-wp' ),
-            __( 'Cat Index WP', 'category-index-wp' ),
+            __( 'WP AdvanceFilter', 'category-index-wp' ),
+            __( 'WP AdvanceFilter', 'category-index-wp' ),
             $capability,
             $slug,
             [ $this, 'menu_page_template' ],

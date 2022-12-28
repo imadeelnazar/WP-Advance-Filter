@@ -1,0 +1,18 @@
+
+.add-form,
+.addNewElement .middle-wrap button,
+.addNewElement .edit-form,
+.updatingData .middle-wrap button,
+.cancel-btn,
+.updatingData .updateClass .edit-simple-header,
+.updatingData .wp-category-form-wrap-static,
+.updatingData .add-form{
+    display: none;
+}
+.wp-category-form-wrap-static{
+    cursor: pointer;
+}
+.addNewElement .middle-wrap .cancel-btn,
+.addNewElement .add-form{
+    display: block;
+}
