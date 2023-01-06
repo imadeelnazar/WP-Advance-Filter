@@ -1,12 +1,50 @@
 import React, { useState, Fragment, useEffect, useRef } from "react";
 import axios from 'axios';
 import { nanoid } from "nanoid";
+
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 import "./App.css";
 
 import ReadOnlyRow from "./components/ReadOnlyRow";
 import EditableRow from "./components/EditableRow";
 
 const App = () => {
+
+  /* Dialog Box Material UI Starts */
+  const [open, setOpen] = useState(false);
+  const [deleteID, setDeleteID] = useState(false);
+
+  const handleClickOpen = (id) => {
+    setOpen(true);
+    setDeleteID(id);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleAgree = () => {
+    const newContacts = [...contacts];
+
+    const index = contacts.findIndex((contact) => contact.id === deleteID);
+
+    newContacts.splice(index, 1);
+    setParentClassEdit('app-container noData');
+
+    setContacts(newContacts);
+    handleClose();
+  };
+  const handleDisagree = () => {
+    // console.log("I do not agree.");
+    handleClose();
+  };
+  /* Dialog Box Material UI Ends */
 
   const [ loader, setLoader ] = useState( 'Save Settings' );
   const [ addClassEdit, setaddClassEdit ] = useState( '' );
@@ -292,8 +330,9 @@ const App = () => {
       </div>
       <div className="middle-wrap">
         <h4 className="wp-af-heading">WP AdvanceFilter</h4>
-        <button type="submit" onClick={handleAddNewFormClick}>Add New</button>
-        <button className="cancel-btn" type="submit" onClick={handleCancelFormClick}>Back</button>
+        <button className="add-new-btn-submit" type="submit" onClick={handleAddNewFormClick}>Add New</button>
+        <button className="cancel-btn" type="submit" onClick={handleCancelFormClick}>Cancel</button>
+        <button className="cancel-btn-edit" type="button" onClick={handleCancelClick}>Cancel</button>
       </div>
       <form className="edit-form" onSubmit={handleEditFormSubmit}>
         <div className={addClassEdit}>
@@ -310,7 +349,7 @@ const App = () => {
                   <EditableRow
                     editFormData={editFormData}
                     handleEditFormChange={handleEditFormChange}
-                    handleCancelClick={handleCancelClick}
+                    handleClickOpen={handleClickOpen}
                     handleCategories={categories}
                     handleDataType={dataType_o}
                   />
@@ -319,6 +358,7 @@ const App = () => {
                     contact={contact}
                     handleEditClick={handleEditClick}
                     handleDeleteClick={handleDeleteClick}
+                    handleClickOpen={handleClickOpen}
                     handleCategories={categories}
                     handleDataType={dataType_o}
                   />
@@ -326,6 +366,28 @@ const App = () => {
               </Fragment>
             ))}
           </div>
+           <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Are you sure want to do this?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Deleting this will remove this from the list
+                you need to save the settings to update the database record.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDisagree}>No</Button>
+              <Button onClick={() => handleAgree()} autoFocus>
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
       </form>
       <form className="add-form">
         {/* {(evnt)=>handleChange(index, evnt)} */}
@@ -345,7 +407,7 @@ const App = () => {
             </div>
           </div>
           <div className="wp-category-item-field">
-            <label>Facet type::</label>
+            <label>Type:</label>
             <div className="wp-category-item">
             <select name="facetType" required="required" onChange={handleAddFormChange}>
               {dataType_o.map(( val, label ) => <option key={label} >{val.label}</option>)}
@@ -354,7 +416,7 @@ const App = () => {
             </div>
           </div>
           <div className="wp-category-item-field">
-            <label>Data source:</label>
+            <label>Data Source:</label>
             <div className="wp-category-item">
             <select name="dataSource" required="required" onChange={handleAddFormChange}>
               {Object.values(categories).map((category, i) => (

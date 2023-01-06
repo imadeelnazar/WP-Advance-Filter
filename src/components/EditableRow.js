@@ -3,7 +3,6 @@ import React from "react";
 const EditableRow = ({
   editFormData,
   handleEditFormChange,
-  handleCancelClick,
   handleCategories,
   handleDataType,
 }) => {
@@ -99,7 +98,7 @@ const EditableRow = ({
             </div>
           </div>
           <button type="submit">Update</button>
-          <button type="button" onClick={handleCancelClick}>Cancel</button>
+
         </div>
   );
 };
