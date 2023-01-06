@@ -1,6 +1,6 @@
-# Starter WordPress Plugin ReactJS
-A ready-to-use WordPress Plugin makes it easy to integrate React JS into the development of a WordPress Plugin.
-you can create your JSX components and turn them into Javascript which will be enqueue by WordPress.
+# WordPress Advance Filter
+Plugin Help you filter posts, products events by categories, tags date and much more.
+You can create custom filter by building custom query.
 
 ## Requirements
 
@@ -26,4 +26,4 @@ now you can create your JSX components, and when you're ready, rerun ``` $ webpa
 
 ## View
 
-the Plugin create a menu entry in `  Settings->WP  Plugin React ` , visit this page to see the result.
+the Plugin create a menu entry in `  Dashboard > WP Advance Filter ` , visit this page to see the result.
