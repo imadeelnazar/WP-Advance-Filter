@@ -74,7 +74,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 ### Built With
 
 * [![React][React.js]][React-url]
-* [![Laravel][Wordpress.org]][WordPress-url]
+* [![WordPress][Wordpress.org]][WordPress-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 * [![JQuery][JQuery.com]][JQuery-url]
 
