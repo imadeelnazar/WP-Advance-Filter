@@ -1,12 +1,15 @@
-.wrap{
-	margin: 0px 0px;
+#wprk-admin-app {
+	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+	margin: -10px -20px 0px -20px;
 }
 .top-row {
     display: flex;
     justify-content: space-between;
     padding: 8px 20px;
     background-color: #fff;
-    border-bottom: 1px solid #aaa; 
+    border-bottom: 1px solid #aaa;
     align-items: center;
 }
 .topbar-left,
@@ -20,9 +23,6 @@
 	margin-bottom: 0px;
 	border-radius: 3px;
 	font-size: 14px;
-}
-#wpcontent{
-	padding: 0px 0px;
 }
 .topbar-left div span,
 .topbar-left div a{
@@ -60,7 +60,7 @@
 	padding: 8px 0px;
 }
 .wp-category-form-wrap-static div,
-.edit-simple-item{ 
+.edit-simple-item{
 	width:20%;
 }
 .wp-category-form-wrap-static:nth-child(odd){
@@ -75,11 +75,7 @@
     border: 1px solid #ccc;
     margin-right: 10px;
 }
-#wprk-admin-app{
-	background-color: #fff;
-	display: flex;
-	flex-direction: column;
-}
+
 /**/
 .wp-category-item-field {
     display: grid;
@@ -90,9 +86,7 @@
 .wp-category-item-field input{
 	width: 220px;
 }
-.add-form > button{
-
-}
+.wp-category-form-wrap-dynamic hr,
 .add-form hr{
 	margin-bottom: 25px;
 }
@@ -106,4 +100,18 @@
 }
 .middle-wrap h4{
 	margin: 2px 15px 0px 0px;
+}
+strong.footer-pull-right {
+	margin-left: 20px;
+	padding-bottom: 50px;
+	float: left;
+}
+.wp-category-item-field .wp-category-item .error {
+	padding: 5px 10px;
+	margin: 5px 15px 2px;
+}
+.wp-category-item-field select,
+.wp-category-item-field input {
+	width: 220px;
+	height: 38px;
 }

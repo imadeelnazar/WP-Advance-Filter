@@ -10,7 +10,6 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "^4.0.3",
-    "react-sortable": "^2.0.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

@@ -1,7 +1,5 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, Fragment, useEffect, useRef } from "react";
 import axios from 'axios';
-
-
 import { nanoid } from "nanoid";
 import "./App.css";
 
@@ -10,50 +8,62 @@ import EditableRow from "./components/EditableRow";
 
 const App = () => {
 
-    const [ loader, setLoader ] = useState( 'Save Settings' );
-    const [ addClassEdit, setaddClassEdit ] = useState( '' );
-    const [ addParentClassEdit, setParentClassEdit ] = useState( 'app-container' );
+  const [ loader, setLoader ] = useState( 'Save Settings' );
+  const [ addClassEdit, setaddClassEdit ] = useState( '' );
+  const [ addParentClassEdit, setParentClassEdit ] = useState( 'app-container' );
+
+  const [ errorMsgName, setErrorMsgName ] = useState( '' );
+  const [ errorMsgfacetType, setErrorMsgfacetType ] = useState( '' );
+  const [ errorMsgDataSource, setErrorMsgDataSource ] = useState( '' );
+  const [ errorMsgDefaultLabel, setErrorMsgDefaultLabel ] = useState( '' );
+  const [ errorMsgValueModifier, setErrorMsgValueModifier ] = useState( '' );
+  const [ errorMsgParentTerm, setErrorMsgParentTerm ] = useState( '' );
+  const [ errorMsgWpcfLogic, setErrorMsgWpcfLogic ] = useState( '' );
+  const [ errorMsgWpcfSortBy, setErrorMsgWpcfSortBy ] = useState( '' );
 
 
-    const [categories, setCategories] = useState([]);
-    useEffect(() => {
-    fetch(appLocalizer.apiUrl + "/wp/v2/taxonomies")
-        .then(response => response.json())
-        .then(data => {
-            setCategories(data);
-        })
-    }, []);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+  fetch(appLocalizer.apiUrl + "/wp/v2/taxonomies")
+      .then(response => response.json())
+      .then(data => {
+          setCategories(data);
+      })
+  }, []);
 
 
-    const url = `${appLocalizer.apiUrl}/wprk/v1/settings`;
+  const url = `${appLocalizer.apiUrl}/wprk/v1/settings`;
+  const handleSubmit = (e) => {
+      e.preventDefault();
+      setLoader( 'Saving...' );
+      // console.log(inputFields[0]);
+      axios.post( url, contacts, {
+          headers: {
+              'content-type': 'application/json',
+              'X-WP-NONCE': appLocalizer.nonce
+          }
+      } )
+      .then( ( res ) => {
+          setLoader( 'Save Settings' );
+          window.location.reload(true);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setLoader( 'Saving...' );
-        // console.log(inputFields[0]);
-        axios.post( url, contacts, {
-            headers: {
-                'content-type': 'application/json',
-                'X-WP-NONCE': appLocalizer.nonce
-            }
-        } )
-        .then( ( res ) => {
-            setLoader( 'Save Settings' );
-        } )
-    }
-    const [contacts, setContacts] = useState();
-    const [information, setinformation] = useState();
-    useEffect( () => {
-        axios.get( url )
-        .then( ( res ) => {
-            setinformation(res.data.ciwp_title);
-            setContacts(res.data.ciwp_title);
-        }).catch((err) => {
-            console.log(err);
-        });
-    }, [] )
+      } )
+  }
 
-// console.log(contacts)
+  const [contacts, setContacts] = useState();
+  const [information, setinformation] = useState();
+  useEffect( () => {
+      axios.get( url )
+      .then( ( res ) => {
+          setinformation(res.data.wprk_settings);
+          setContacts(res.data.wprk_settings);
+      }).catch((err) => {
+          console.log(err);
+      });
+  }, [] )
+
+
 
 
   const [addFormData, setAddFormData] = useState({
@@ -66,6 +76,7 @@ const App = () => {
     wpcfLogic: "",
     wpcfSortBy: "",
   });
+
 
   const [editFormData, setEditFormData] = useState({
     fullName: "",
@@ -108,6 +119,54 @@ const App = () => {
   const handleAddFormSubmit = (event) => {
     event.preventDefault();
 
+    // if(addFormData.fullName === ''){
+    //   setErrorMsgName('Label cannot be left empty!');
+    //   return false;
+    // }
+    // setErrorMsgName('');
+
+    // if ( addFormData.facetType === '' ){
+    //   setErrorMsgfacetType('Facet Type cannot be left empty!');
+    //   return false;
+    // }
+    // setErrorMsgfacetType('');
+
+    // if(addFormData.dataSource === ''){
+    //   setErrorMsgDataSource('Data Source cannot be left empty!');
+    //   return false;
+    // }
+    // setErrorMsgDataSource('');
+
+    // if(addFormData.defaultLabel === ''){
+    //   setErrorMsgDefaultLabel('Data Source cannot be left empty!');
+    //   return false;
+    // }
+    // setErrorMsgDefaultLabel('');
+
+    // if(addFormData.valueModifier === ''){
+    //   setErrorMsgValueModifier('Data Source cannot be left empty!');
+    //   return false;
+    // }
+    // setErrorMsgValueModifier('');
+
+    // if(addFormData.parentTerm === ''){
+    //   setErrorMsgParentTerm('Data Source cannot be left empty!');
+    //   return false;
+    // }
+    // setErrorMsgParentTerm('');
+
+    // if(addFormData.wpcfLogic === ''){
+    //   setErrorMsgWpcfLogic('Data Source cannot be left empty!');
+    //   return false;
+    // }
+    // setErrorMsgWpcfLogic('');
+
+    // if(addFormData.wpcfSortBy === ''){
+    //   setErrorMsgWpcfSortBy('Data Source cannot be left empty!');
+    //   return false;
+    // }
+    // setErrorMsgWpcfSortBy('');
+
     const newContact = {
       id: nanoid(),
       fullName: addFormData.fullName,
@@ -120,7 +179,7 @@ const App = () => {
       wpcfSortBy: addFormData.wpcfSortBy,
     };
 
-    const newContacts = [...contacts, newContact];
+    const newContacts = [...contacts, newContact] || newContact;
     setContacts(newContacts);
 
     setParentClassEdit('app-container savingData');
@@ -216,6 +275,7 @@ const App = () => {
 
   return (
     <div className={addParentClassEdit}>
+
       <div className="top-row">
         <div className="topbar-left">
         <div className=""><a href="">WP AdvanceFilter</a><span>Version 1.0</span></div>
@@ -241,7 +301,7 @@ const App = () => {
             <div className="edit-simple-item"><strong>Label</strong></div>
             <div className="edit-simple-item"><strong>Data Type</strong></div>
             <div className="edit-simple-item"><strong>Source Type</strong></div>
-            <div className="edit-simple-item"><strong>Parent Term</strong></div>
+            <div className="edit-simple-item"><strong>Shortcode</strong></div>
             <div className="edit-simple-item"><strong>Action</strong></div>
           </div>
             {contacts && contacts.map((contact) => (
@@ -270,8 +330,9 @@ const App = () => {
       <form className="add-form">
         {/* {(evnt)=>handleChange(index, evnt)} */}
         <div className="wp-category-form-wrap">
-          <div className="wp-category-item-field">
+          <div className="wp-category-item-field wp-category-item-title">
             <label>Label:</label>
+            <div className="wp-category-item">
             <input
               type="text"
               name="fullName"
@@ -279,24 +340,34 @@ const App = () => {
               placeholder="Enter a name..."
               onChange={handleAddFormChange}
             />
+            {addFormData.fullName && <code className="short-code">{addFormData.fullName}</code>}
+            {errorMsgName && <div className="error">{errorMsgName}</div>}
+            </div>
           </div>
           <div className="wp-category-item-field">
             <label>Facet type::</label>
+            <div className="wp-category-item">
             <select name="facetType" required="required" onChange={handleAddFormChange}>
               {dataType_o.map(( val, label ) => <option key={label} >{val.label}</option>)}
             </select>
+            {errorMsgfacetType && <div className="error">{errorMsgfacetType}</div>}
+            </div>
           </div>
           <div className="wp-category-item-field">
             <label>Data source:</label>
+            <div className="wp-category-item">
             <select name="dataSource" required="required" onChange={handleAddFormChange}>
               {Object.values(categories).map((category, i) => (
-                  <option key={i}>{category.name}</option>
+                  <option value={category.slug} key={i}>{category.name}</option>
               ))}
             </select>
+            {errorMsgDataSource && <div className="error">{errorMsgDataSource}</div>}
+            </div>
           </div>
           <hr />
           <div className="wp-category-item-field">
             <label>Default Label:</label>
+            <div className="wp-category-item">
             <input
               type="text"
               name="defaultLabel"
@@ -304,17 +375,23 @@ const App = () => {
               placeholder="Enter an default label or leave blank"
               onChange={handleAddFormChange}
             />
+            {errorMsgDefaultLabel && <div className="error">{errorMsgDefaultLabel}</div>}
+            </div>
           </div>
           <div className="wp-category-item-field">
             <label>Value Modifiers:</label>
+            <div className="wp-category-item">
             <select name="valueModifier" required="required" onChange={handleAddFormChange}>
               <option value="off">Off</option>
               <option value="exclude">Exclude these values</option>
               <option value="include">Show only these values</option>
             </select>
+            {errorMsgValueModifier && <div className="error">{errorMsgValueModifier}</div>}
+            </div>
           </div>
           <div className="wp-category-item-field">
             <label>Parent term:</label>
+            <div className="wp-category-item">
             <input
               type="text"
               name="parentTerm"
@@ -322,22 +399,30 @@ const App = () => {
               placeholder="Enter an term ID or leave blank"
               onChange={handleAddFormChange}
             />
+            {errorMsgParentTerm && <div className="error">{errorMsgParentTerm}</div>}
+            </div>
           </div>
           <div className="wp-category-item-field">
             <label>Logic:</label>
+            <div className="wp-category-item">
             <select name="wpcfLogic" required="required" onChange={handleAddFormChange}>
               <option value="and">AND (match all)</option>
               <option value="or">OR (match any)</option>
             </select>
+            {errorMsgWpcfLogic && <div className="error">{errorMsgWpcfLogic}</div>}
+            </div>
           </div>
           <div className="wp-category-item-field">
             <label>Sort by:</label>
+            <div className="wp-category-item">
             <select name="wpcfSortBy" required="required" onChange={handleAddFormChange}>
               <option value="count">Highest count</option>
               <option value="display_value">Display value</option>
               <option value="raw_value">Raw value</option>
               <option value="term_order">Term order</option>
             </select>
+            {errorMsgWpcfSortBy && <div className="error">{errorMsgWpcfSortBy}</div>}
+            </div>
           </div>
           <button onClick={handleAddFormSubmit} type="submit">Save Filter</button>
         </div>

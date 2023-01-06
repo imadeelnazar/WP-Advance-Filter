@@ -6,7 +6,7 @@ const ReadOnlyRow = ({ contact, handleEditClick, handleDeleteClick }) => {
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.fullName}</div>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.facetType}</div>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.dataSource}</div>
-        <div onClick={(event) => handleEditClick(event, contact)}>{contact.parentTerm}</div>
+        <div><code>[{contact.fullName}]</code></div>
       <div>
         <button type="button" onClick={() => handleDeleteClick(contact.id)}>
           X

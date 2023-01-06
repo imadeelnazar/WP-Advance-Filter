@@ -16,3 +16,6 @@
 .addNewElement .add-form{
     display: block;
 }
+.error {
+    display: inline-block;
+}

@@ -22,9 +22,9 @@ class WP_React_Settings_Rest_Route {
     }
 
     public function get_settings() {
-        $ciwp_title = get_option( 'wprk_settings_ciwp_title' );
+        $wprk_settings = get_option( 'wprk_settings' );
         $response = [
-            'ciwp_title' => $ciwp_title,
+            'wprk_settings' => $wprk_settings,
         ];
 
         return rest_ensure_response( $response );
@@ -37,7 +37,7 @@ class WP_React_Settings_Rest_Route {
     public function save_settings( $req ) {
 
 
-        update_option( 'wprk_settings_ciwp_title', $req->get_params() );
+        update_option( 'wprk_settings', $req->get_params() );
 
         return rest_ensure_response( 'success' );
 
