@@ -4,7 +4,7 @@ You can create custom filter by building custom query.
 
 ## Requirements
 
-Install the  module bundler Webpack v4+ , webpack-cli  ***globally***.
+Install the  module bundler Webpack v4+
 ```
 npm install my-webpack-project
 ```
