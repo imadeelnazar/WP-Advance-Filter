@@ -34,6 +34,7 @@ const App = () => {
     setContacts(newContacts);
     handleClose();
   };
+
   const handleDisagree = () => {
     handleClose();
   };
