@@ -6,8 +6,7 @@ You can create custom filter by building custom query.
 
 Install the  module bundler Webpack v4+ , webpack-cli  ***globally***.
 ```
-npm install -g webpack
-npm install -g webpack-cli
+npm install my-webpack-project
 ```
 
 ## Installation
@@ -16,10 +15,6 @@ npm install -g webpack-cli
 2.  Install the dependencies :
 ```
   $ npm install
-```
-3. run webpack  :
-```
-  $ webpack
 ```
 **and that's all!** :+1:  you will have a new directory at the root of your plugin: `dist` which contains the compiled javascript file.
 now you can create your JSX components, and when you're ready, rerun ``` $ webpack```.
