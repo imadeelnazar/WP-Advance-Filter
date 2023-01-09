@@ -23,3 +23,41 @@
 .error {
     display: inline-block;
 }
+code.short-code {
+    margin-left: 20px;
+    padding: 10px;
+}
+.dialog-box{
+    display:none;
+}
+div[open].dialog-box {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+}
+div[open].dialog-box .dialog-box-inner {
+    width: 400px;
+    height: 150px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 30px;
+    bottom: 0;
+    margin: auto;
+    z-index: 9999999999999;
+    background: #fff;
+    opacity: 1;
+}
+.dialog-yes,
+.dialog-no{
+    padding:5px 15px;
+}
+.dialog-no{
+    margin-right:5px;
+}

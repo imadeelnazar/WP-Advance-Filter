@@ -1,22 +1,16 @@
-import React, { useState, Fragment, useEffect, useRef } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import axios from 'axios';
 import { nanoid } from "nanoid";
 
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-
 import "./App.css";
 
+import AFNewForm from "./components/AFNewForm";
 import ReadOnlyRow from "./components/ReadOnlyRow";
 import EditableRow from "./components/EditableRow";
 
 const App = () => {
 
-  /* Dialog Box Material UI Starts */
+  /* Dialog Box Starts*/
   const [open, setOpen] = useState(false);
   const [deleteID, setDeleteID] = useState(false);
 
@@ -41,10 +35,9 @@ const App = () => {
     handleClose();
   };
   const handleDisagree = () => {
-    // console.log("I do not agree.");
     handleClose();
   };
-  /* Dialog Box Material UI Ends */
+  /* Dialog Box Ends */
 
   const [ loader, setLoader ] = useState( 'Save Settings' );
   const [ addClassEdit, setaddClassEdit ] = useState( '' );
@@ -313,7 +306,6 @@ const App = () => {
 
   return (
     <div className={addParentClassEdit}>
-
       <div className="top-row">
         <div className="topbar-left">
         <div className=""><a href="">WP AdvanceFilter</a><span>Version 1.0</span></div>
@@ -366,129 +358,27 @@ const App = () => {
               </Fragment>
             ))}
           </div>
-           <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">
-              {"Are you sure want to do this?"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                Deleting this will remove this from the list
-                you need to save the settings to update the database record.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDisagree}>No</Button>
-              <Button onClick={() => handleAgree()} autoFocus>
-                Yes
-              </Button>
-            </DialogActions>
-          </Dialog>
+           <div className="dialog-box" open={open} onClose={handleClose}>
+            <div className="dialog-box-inner">
+              <h3>Are you sure want to do this?</h3>
+              <p className="alert-dialog-description">
+              Deleting this will remove this from the list
+              you need to save the settings to update the database record.
+              </p>
+              <div className="dialog-footer">
+                <button className="dialog-no" onClick={handleDisagree}>No</button>
+                <button className="dialog-yes" onClick={() => handleAgree()} autoFocus>Yes</button>
+              </div>
+            </div>
+          </div>
       </form>
-      <form className="add-form">
-        {/* {(evnt)=>handleChange(index, evnt)} */}
-        <div className="wp-category-form-wrap">
-          <div className="wp-category-item-field wp-category-item-title">
-            <label>Label:</label>
-            <div className="wp-category-item">
-            <input
-              type="text"
-              name="fullName"
-              required="required"
-              placeholder="Enter a name..."
-              onChange={handleAddFormChange}
-            />
-            {addFormData.fullName && <code className="short-code">{addFormData.fullName}</code>}
-            {errorMsgName && <div className="error">{errorMsgName}</div>}
-            </div>
-          </div>
-          <div className="wp-category-item-field">
-            <label>Type:</label>
-            <div className="wp-category-item">
-            <select name="facetType" required="required" onChange={handleAddFormChange}>
-              {dataType_o.map(( val, label ) => <option key={label} >{val.label}</option>)}
-            </select>
-            {errorMsgfacetType && <div className="error">{errorMsgfacetType}</div>}
-            </div>
-          </div>
-          <div className="wp-category-item-field">
-            <label>Data Source:</label>
-            <div className="wp-category-item">
-            <select name="dataSource" required="required" onChange={handleAddFormChange}>
-              {Object.values(categories).map((category, i) => (
-                  <option value={category.slug} key={i}>{category.name}</option>
-              ))}
-            </select>
-            {errorMsgDataSource && <div className="error">{errorMsgDataSource}</div>}
-            </div>
-          </div>
-          <hr />
-          <div className="wp-category-item-field">
-            <label>Default Label:</label>
-            <div className="wp-category-item">
-            <input
-              type="text"
-              name="defaultLabel"
-              required="required"
-              placeholder="Enter an default label or leave blank"
-              onChange={handleAddFormChange}
-            />
-            {errorMsgDefaultLabel && <div className="error">{errorMsgDefaultLabel}</div>}
-            </div>
-          </div>
-          <div className="wp-category-item-field">
-            <label>Value Modifiers:</label>
-            <div className="wp-category-item">
-            <select name="valueModifier" required="required" onChange={handleAddFormChange}>
-              <option value="off">Off</option>
-              <option value="exclude">Exclude these values</option>
-              <option value="include">Show only these values</option>
-            </select>
-            {errorMsgValueModifier && <div className="error">{errorMsgValueModifier}</div>}
-            </div>
-          </div>
-          <div className="wp-category-item-field">
-            <label>Parent term:</label>
-            <div className="wp-category-item">
-            <input
-              type="text"
-              name="parentTerm"
-              required="required"
-              placeholder="Enter an term ID or leave blank"
-              onChange={handleAddFormChange}
-            />
-            {errorMsgParentTerm && <div className="error">{errorMsgParentTerm}</div>}
-            </div>
-          </div>
-          <div className="wp-category-item-field">
-            <label>Logic:</label>
-            <div className="wp-category-item">
-            <select name="wpcfLogic" required="required" onChange={handleAddFormChange}>
-              <option value="and">AND (match all)</option>
-              <option value="or">OR (match any)</option>
-            </select>
-            {errorMsgWpcfLogic && <div className="error">{errorMsgWpcfLogic}</div>}
-            </div>
-          </div>
-          <div className="wp-category-item-field">
-            <label>Sort by:</label>
-            <div className="wp-category-item">
-            <select name="wpcfSortBy" required="required" onChange={handleAddFormChange}>
-              <option value="count">Highest count</option>
-              <option value="display_value">Display value</option>
-              <option value="raw_value">Raw value</option>
-              <option value="term_order">Term order</option>
-            </select>
-            {errorMsgWpcfSortBy && <div className="error">{errorMsgWpcfSortBy}</div>}
-            </div>
-          </div>
-          <button onClick={handleAddFormSubmit} type="submit">Save Filter</button>
-        </div>
-      </form>
+      <AFNewForm
+        addFormData={addFormData}
+        handleAddFormSubmit={handleAddFormSubmit}
+        handleAddFormChange={handleAddFormChange}
+        dataType_o={dataType_o}
+        categories={categories}
+      />
       <strong className="footer-pull-right">Design and Developed by <a href="">WPScience</a></strong>
     </div>
   );
