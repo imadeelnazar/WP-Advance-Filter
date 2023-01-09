@@ -313,7 +313,6 @@ const App = () => {
         <div className=""><a href="">WP AdvanceFilter</a><span>Version 1.0</span></div>
         <ul className="nav">
           <li>Advance Filter</li>
-          <li>Template</li>
           <li>Settings</li>
           <li>Support</li>
         </ul>

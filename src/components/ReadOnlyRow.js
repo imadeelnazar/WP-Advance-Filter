@@ -11,7 +11,7 @@ const ReadOnlyRow = ({ contact, handleEditClick, handleDeleteClick, handleClickO
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.fullName}</div>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.facetType}</div>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.dataSource}</div>
-        <div><code><CopyToClipboard text={"[" + contact.fullName+"]"} onCopy={() => CopiedText}>
+        <div><code><CopyToClipboard text={"[wpaf_" + contact.fullName+"]"} onCopy={() => CopiedText}>
         <span>{"[" + contact.fullName+"]"}</span></CopyToClipboard></code></div>
       <div>
         <button type="button" onClick={() => handleClickOpen(contact.id)}>
