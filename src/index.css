@@ -27,9 +27,11 @@ code.short-code {
     margin-left: 20px;
     padding: 10px;
 }
+.dialog-box-alert,
 .dialog-box{
     display:none;
 }
+div[open].dialog-box-alert,
 div[open].dialog-box {
     display: block;
     position: fixed;
@@ -40,6 +42,7 @@ div[open].dialog-box {
     background: rgba(0, 0, 0, 0.3);
     z-index: 9999;
 }
+div[open].dialog-box-alert .dialog-box-inner,
 div[open].dialog-box .dialog-box-inner {
     width: 400px;
     height: 150px;
@@ -53,6 +56,10 @@ div[open].dialog-box .dialog-box-inner {
     z-index: 9999999999999;
     background: #fff;
     opacity: 1;
+}
+div[open].dialog-box-alert .dialog-box-inner{
+    height:100px;
+    width:300px;
 }
 .dialog-yes,
 .dialog-no{
