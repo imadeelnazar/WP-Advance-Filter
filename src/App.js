@@ -2,6 +2,7 @@ import React, { useState, Fragment, useEffect } from "react";
 import axios from 'axios';
 import { nanoid } from "nanoid";
 
+
 import "./App.css";
 
 import AFNewForm from "./components/AFNewForm";
@@ -312,7 +313,6 @@ const App = () => {
         <div className=""><a href="">WP AdvanceFilter</a><span>Version 1.0</span></div>
         <ul className="nav">
           <li>Advance Filter</li>
-          <li>Template</li>
           <li>Settings</li>
           <li>Support</li>
         </ul>

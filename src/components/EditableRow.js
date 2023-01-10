@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const EditableRow = ({
   editFormData,
   handleEditFormChange,
   handleCategories,
-  handleDataType,
+  handleDataType
 }) => {
   return (
         <div className="wp-category-form-wrap wp-category-form-wrap-dynamic">
@@ -19,7 +20,10 @@ const EditableRow = ({
               value={editFormData.fullName}
               onChange={handleEditFormChange}
             ></input>
-            {editFormData.fullName && <code className="short-code">{editFormData.fullName}</code>}
+            {editFormData.fullName &&
+            <code className="short-code"><CopyToClipboard text={"[wpaf_" + editFormData.fullName+"]"} onCopy={() => alert("Shortcode Copied")}>
+        <span>{"[" + editFormData.fullName+"]"}</span></CopyToClipboard></code>
+            }
             </div>
           </div>
           <div className="wp-category-item-field">
