@@ -289,8 +289,9 @@ const App = () => {
   }
 
   const dataType_o = [
-      { value: 'checkboxes', label: 'Checkboxes' },
+      { value: 'link', label: 'Link' },
       { value: 'dropdown', label: 'Dropdown' },
+      { value: 'checkbox', label: 'Checkbox' },
       { value: 'cselect', label: 'Dropdown (cSelect)' },
       { value: 'hierarchy', label: 'Hierarchy' },
       { value: 'search', label: 'Search' },

@@ -22,7 +22,7 @@ const AFNewForm = ({ addFormData, handleAddFormSubmit, handleAddFormChange, data
             <label>Type:</label>
             <div className="wp-category-item">
             <select name="facetType" required="required" onChange={handleAddFormChange}>
-              {dataType_o.map(( val, label ) => <option key={label} >{val.label}</option>)}
+              {dataType_o.map(( val, label ) => <option value={val.value} key={label} >{val.label}</option>)}
             </select>
 
             </div>
@@ -53,12 +53,11 @@ const AFNewForm = ({ addFormData, handleAddFormSubmit, handleAddFormChange, data
             </div>
           </div>
           <div className="wp-category-item-field">
-            <label>Value Modifiers:</label>
+            <label>Empty Category:</label>
             <div className="wp-category-item">
             <select name="valueModifier" required="required" onChange={handleAddFormChange}>
-              <option value="off">Off</option>
-              <option value="exclude">Exclude these values</option>
-              <option value="include">Show only these values</option>
+              <option value="false">Hide</option>
+              <option value="true">Show</option>
             </select>
             </div>
           </div>
@@ -75,11 +74,11 @@ const AFNewForm = ({ addFormData, handleAddFormSubmit, handleAddFormChange, data
             </div>
           </div>
           <div className="wp-category-item-field">
-            <label>Logic:</label>
+            <label>WP Query:</label>
             <div className="wp-category-item">
             <select name="wpcfLogic" required="required" onChange={handleAddFormChange}>
-              <option value="and">AND (match all)</option>
-              <option value="or">OR (match any)</option>
+              <option value="edit">Change Main Query</option>
+              <option value="custom">Custom</option>
             </select>
             </div>
           </div>
