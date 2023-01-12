@@ -2,7 +2,6 @@ import React, { useState, Fragment, useEffect } from "react";
 import axios from 'axios';
 import { nanoid } from "nanoid";
 
-
 import "./App.css";
 
 import AFNewForm from "./components/AFNewForm";
@@ -290,8 +289,9 @@ const App = () => {
   }
 
   const dataType_o = [
-      { value: 'checkboxes', label: 'Checkboxes' },
+      { value: 'link', label: 'Link' },
       { value: 'dropdown', label: 'Dropdown' },
+      { value: 'checkbox', label: 'Checkbox' },
       { value: 'cselect', label: 'Dropdown (cSelect)' },
       { value: 'hierarchy', label: 'Hierarchy' },
       { value: 'search', label: 'Search' },

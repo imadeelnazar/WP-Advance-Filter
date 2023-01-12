@@ -30,7 +30,7 @@ const EditableRow = ({
             <label>Facet type::</label>
             <div className="wp-category-item">
             <select value={editFormData.facetType} name="facetType" required="required" onChange={handleEditFormChange}>
-              {handleDataType.map(( val, label ) => <option key={label} >{val.label}</option>)}
+              {handleDataType.map(( val, label ) => <option value={val.value} key={label} >{val.label}</option>)}
             </select>
             </div>
           </div>
@@ -59,12 +59,11 @@ const EditableRow = ({
             </div>
           </div>
           <div className="wp-category-item-field">
-            <label>Value Modifiers:</label>
+            <label>Empty Category:</label>
             <div className="wp-category-item">
             <select name="valueModifier" value={editFormData.valueModifier} required="required" onChange={handleEditFormChange}>
-              <option value="off">Off</option>
-              <option value="exclude">Exclude these values</option>
-              <option value="include">Show only these values</option>
+              <option value="false">Hide</option>
+              <option value="true">Show</option>
             </select>
             </div>
           </div>
@@ -82,11 +81,11 @@ const EditableRow = ({
             </div>
           </div>
           <div className="wp-category-item-field">
-            <label>Logic:</label>
+            <label>WP Query:</label>
             <div className="wp-category-item">
             <select name="wpcfLogic" value={editFormData.wpcfLogic} required="required" onChange={handleEditFormChange}>
-              <option value="and">AND (match all)</option>
-              <option value="or">OR (match any)</option>
+              <option value="edit">Change Main Query</option>
+              <option value="custom">Custom</option>
             </select>
             </div>
           </div>
