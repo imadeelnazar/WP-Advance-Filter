@@ -2,9 +2,9 @@
 /**
  * Creating Shortcodes handling their trigger
  */
-if(!class_exists('wpaf_Show')){
+if(!class_exists('wpAF_render')){
 
-    class wpaf_Show{
+    class wpAF_render{
 
         /* (array) Get Data From Options */
         public $data = [];
@@ -17,29 +17,27 @@ if(!class_exists('wpaf_Show')){
          * @since 1.0
          */
         function __construct() {
-            $wprk_settings = get_option('wprk_settings');
-            $this->data = $wprk_settings;
-            // print_r($this->data);
-            // foreach($this->data as $item){
-            //     add_shortcode($item['fullName'], array($this,'create_shortcode'));
-            // }
+            $this->data = get_option('wprk_settings');
 
             add_action('init',array($this,'create_shortcode'));
-            add_filter('do_shortcode_tag', array($this,'append_data_into_shortcode'), 10, 2);
-            add_action('pre_get_posts',array($this,'shop_filtered_posts'));
-        }
+            add_filter('do_shortcode_tag', array($this,'render_shortcodes'), 10, 2);
+            add_action('pre_get_posts',array($this,'filtered_data'));
 
+
+
+
+
+        }
 
         /**
         * Append Data into Shortcode to manage the listing
         * @since 1.0
         */
-        function append_data_into_shortcode( $output, $tag ) {
-            global $wp_query,$wp;
+        function render_shortcodes( $output, $tag ) {
+            global $wp;
 
             // get current url with query string.
             $current_url =  home_url( $wp->request );
-
 
             $search_item = '';
             //Function to hold get parametters
@@ -70,7 +68,8 @@ if(!class_exists('wpaf_Show')){
 
             foreach($this->data as $key => $items){
                 if($tag == $items['fullName']){
-                    $html .= '<form method="POST" id="wpaf-form">';
+
+                    $html .= '<form method="POST" data-action="filter_products_list" data-security="' . wp_create_nonce('form-create-nonce') . '" data-ajax="'.admin_url('admin-ajax.php').'" id="wpaf-form">';
 
                     // echo '<pre>';print_r($wp_query);
                     $html.='<input type="hidden" name="afTaxonomy" value="'.esc_attr($items['dataSource']).'" />';
@@ -131,7 +130,7 @@ if(!class_exists('wpaf_Show')){
                                 }
                             }
                             $html.='</ul>';
-                            $html.='<input type="hidden" name="afType" value="'.esc_attr($items['facetType']).'" />';
+                           $html.='<input type="hidden" name="afType" value="'.esc_attr($items['facetType']).'" />';
                         endif;
                     }else if(isset($items['facetType']) && $items['facetType'] === 'checkbox'){
                         if ( !empty($taxonomies) ) :
@@ -160,7 +159,7 @@ if(!class_exists('wpaf_Show')){
                                                 $html.= 'type="checkbox" id="child-check-box-'. esc_html( $subcategory->slug ).'"
                                                 value="'. esc_html( $subcategory->slug ).'"
                                                 name="afCategory[]"> <label for="child-check-box-'. esc_html( $subcategory->slug ).'">'. esc_html( $subcategory->name ).'</label>';
-                                                $html.= $this->subcategories_listing($taxonomies, $subcategory, $current_url);
+                                                $html.= $this->subcategories($taxonomies, $subcategory, $current_url);
                                                 $html.= '</li>';
                                             }
                                         }
@@ -176,25 +175,22 @@ if(!class_exists('wpaf_Show')){
                     if(isset($_POST['afCategory']) && $_POST['afCategory'] <> ''){
                         $html.='<a class="btn-clear" href="'.esc_url($current_url).'">Clear</a>';
                     }
+                    $html .= '<input type="submit" class="submit-n" value="submit">';
                     $html .= '</form>';
                 }
             }
             $output .= $html;
-
-
             return $output;
         }
 
-
-
         /**
         * Sub Categories to End Level
-        * Taxonomy
-        * Sub Category
-        * URL
+        * @param Taxonomies - Taxonomies or Terms
+        * @param SubCategory - Sub Category
+        * @param URL - Current Page URL
         * @since 1.0
         */
-        function subcategories_listing($taxonomies, $subcategory, $url){
+        function subcategories($taxonomies, $subcategory, $url){
             $html = '<ul>';
             foreach( $taxonomies as $subsubcategory ) {
                 $link_sub = add_query_arg( 'af_category', $subcategory->slug , esc_url(get_permalink($url)) );
@@ -204,7 +200,7 @@ if(!class_exists('wpaf_Show')){
                     $html.= 'type="checkbox" id="child-check-box-'. esc_html( $subsubcategory->slug ).'"
                     value="'. esc_html( $subsubcategory->slug ).'"
                     name="afCategory[]"> <label for="child-check-box-'. esc_html( $subsubcategory->slug ).'">'. esc_html( $subsubcategory->name ).'</label>';
-                    $html.= $this->subcategories_listing($taxonomies, $subsubcategory, $url);
+                    $html.= $this->subcategories($taxonomies, $subsubcategory, $url);
                     $html.= '</li>';
                 }
             }
@@ -218,9 +214,10 @@ if(!class_exists('wpaf_Show')){
         * af_category
         * main query altered here to show results
         * on archive and default pages
+        * @param Query - Main Query
         * @since 1.0
         */
-        function shop_filtered_posts($query) {
+        function filtered_data($query) {
 
             if (!is_admin() && is_post_type_archive( 'product' ) && $query->is_main_query()) {
 
@@ -244,12 +241,14 @@ if(!class_exists('wpaf_Show')){
 
 
         /**
-        * Event listeners
+        * Hooks and Crooks
         * @since 1.0
         */
         function run_hooks() {
 
         }
+
+
 
         /**
         * Starting Function
@@ -257,41 +256,37 @@ if(!class_exists('wpaf_Show')){
         */
         function create_shortcode(){
             foreach($this->data as $key => $items){
-                add_shortcode($items['fullName'],array($this, 'shortcode'));
+                add_shortcode($items['fullName'],array($this, 'shortcode_html'));
             }
-
-
         }
 
-
-
-        function shortcode($atts,$content = null){
+        /**
+        * Trigger Shortcode
+        * Style and Script
+        * Submit Form on Change
+        * @param attr - Shortcode Attributes
+        * @param content - Content
+        * @since 1.0
+        */
+        function shortcode_html($atts,$content = null){
             $this->shortcode_atts[] = $atts;
 
-
-            // extract(shortcode_atts(array(
-            //     'style' => '',
-            //     'title' => '',
-            //     'title_color' => '',
-            //     'caption' => '',
-            //     'caption_color' => '',
-            //     'item_margin' => ''
-            // ), $atts));
-            // echo 'adeel';
-            return '<style>.af-woocommerce-link li,.af-woocommerce-link li ul{list-style:none;}.af-woocommerce-link{list-style:none;padding:0px;}</style><script type="text/javascript">jQuery(function(){ jQuery(".checkbox, .select-box").on("change",function(){jQuery("#wpaf-form").submit();});});</script>';
+            return '<style>.af-woocommerce-link li,.af-woocommerce-link li ul{list-style:none;}.af-woocommerce-link{list-style:none;padding:0px;}</style>';
         }
 
         /**
         * Render HTMl
         * @since 1.0
         */
-        function start_render(){
+        function render_ajax_call(){
 
+            return 'ddd';
         }
 
 
-    }
-    new wpaf_Show();
-}
 
+
+    }
+    $wpAF_render = new wpAF_render();
+}
 

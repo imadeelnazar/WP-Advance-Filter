@@ -49,7 +49,6 @@ const AFNewForm = ({ addFormData, handleAddFormSubmit, handleAddFormChange, data
               placeholder="Enter an default label or leave blank"
               onChange={handleAddFormChange}
             />
-
             </div>
           </div>
           <div className="wp-category-item-field">
@@ -62,13 +61,13 @@ const AFNewForm = ({ addFormData, handleAddFormSubmit, handleAddFormChange, data
             </div>
           </div>
           <div className="wp-category-item-field">
-            <label>Parent term:</label>
+            <label>Posts Per Page:</label>
             <div className="wp-category-item">
             <input
               type="text"
-              name="parentTerm"
+              name="postsperpage"
               required="required"
-              placeholder="Enter an term ID or leave blank"
+              placeholder="Enter an Posts per page"
               onChange={handleAddFormChange}
             />
             </div>
