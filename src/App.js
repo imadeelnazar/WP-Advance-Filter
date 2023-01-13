@@ -49,7 +49,7 @@ const App = () => {
   const [ errorMsgDataSource, setErrorMsgDataSource ] = useState( '' );
   const [ errorMsgDefaultLabel, setErrorMsgDefaultLabel ] = useState( '' );
   const [ errorMsgValueModifier, setErrorMsgValueModifier ] = useState( '' );
-  const [ errorMsgParentTerm, setErrorMsgParentTerm ] = useState( '' );
+  const [ errorMsgpostsperpage, setErrorMsgpostsperpage ] = useState( '' );
   const [ errorMsgWpcfLogic, setErrorMsgWpcfLogic ] = useState( '' );
   const [ errorMsgWpcfSortBy, setErrorMsgWpcfSortBy ] = useState( '' );
 
@@ -104,7 +104,7 @@ const App = () => {
     dataSource: "",
     defaultLabel: "",
     valueModifier: "",
-    parentTerm: "",
+    postsperpage: "",
     wpcfLogic: "",
     wpcfSortBy: "",
   });
@@ -116,7 +116,7 @@ const App = () => {
     dataSource: "",
     defaultLabel: "",
     valueModifier: "",
-    parentTerm: "",
+    postsperpage: "",
     wpcfLogic: "",
     wpcfSortBy: "",
   });
@@ -181,11 +181,11 @@ const App = () => {
     // }
     // setErrorMsgValueModifier('');
 
-    // if(addFormData.parentTerm === ''){
-    //   setErrorMsgParentTerm('Data Source cannot be left empty!');
+    // if(addFormData.postsperpage === ''){
+    //   setErrorMsgpostsperpage('Data Source cannot be left empty!');
     //   return false;
     // }
-    // setErrorMsgParentTerm('');
+    // setErrorMsgpostsperpage('');
 
     // if(addFormData.wpcfLogic === ''){
     //   setErrorMsgWpcfLogic('Data Source cannot be left empty!');
@@ -206,7 +206,7 @@ const App = () => {
       dataSource: addFormData.dataSource,
       defaultLabel: addFormData.defaultLabel,
       valueModifier: addFormData.valueModifier,
-      parentTerm: addFormData.parentTerm,
+      postsperpage: addFormData.postsperpage,
       wpcfLogic: addFormData.wpcfLogic,
       wpcfSortBy: addFormData.wpcfSortBy,
     };
@@ -227,7 +227,7 @@ const App = () => {
       dataSource: editFormData.dataSource,
       defaultLabel: editFormData.defaultLabel,
       valueModifier: editFormData.valueModifier,
-      parentTerm: editFormData.parentTerm,
+      postsperpage: editFormData.postsperpage,
       wpcfLogic: editFormData.wpcfLogic,
       wpcfSortBy: editFormData.wpcfSortBy,
     };
@@ -255,7 +255,7 @@ const App = () => {
       dataSource: contact.dataSource,
       defaultLabel: contact.defaultLabel,
       valueModifier: contact.valueModifier,
-      parentTerm: contact.parentTerm,
+      postsperpage: contact.postsperpage,
       wpcfLogic: contact.wpcfLogic,
       wpcfSortBy: contact.wpcfSortBy,
     };

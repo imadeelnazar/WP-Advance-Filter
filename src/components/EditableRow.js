@@ -7,6 +7,7 @@ const EditableRow = ({
   handleCategories,
   handleDataType
 }) => {
+  const [isOpen, setisOpen] = useState(false)
   return (
         <div className="wp-category-form-wrap wp-category-form-wrap-dynamic">
           <div className="wp-category-item-field">
@@ -68,14 +69,14 @@ const EditableRow = ({
             </div>
           </div>
           <div className="wp-category-item-field">
-            <label>Parent term:</label>
+            <label>Posts Per Page:</label>
             <div className="wp-category-item">
             <input
               type="text"
-              name="parentTerm"
+              name="postsperpage"
               required="required"
               placeholder="Enter an term ID or leave blank"
-              value={editFormData.parentTerm}
+              value={editFormData.postsperpage}
               onChange={handleEditFormChange}
             ></input>
             </div>
