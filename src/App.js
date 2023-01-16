@@ -54,50 +54,75 @@ const App = () => {
   const [ errorMsgWpcfSortBy, setErrorMsgWpcfSortBy ] = useState( '' );
 
 
-  const [categories, setCategories] = useState([]);
+ // Use the useState hook to create a state variable 'categories' and the setCategories function to update it.
+const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-  fetch(appLocalizer.apiUrl + "/wp/v2/taxonomies")
-      .then(response => response.json())
-      .then(data => {
-          setCategories(data);
-      })
-  }, []);
+// Use the useEffect hook to fetch data from the API when the component is loaded.
+// This effect only runs once when the component is first loaded.
+useEffect(() => {
+  // Use the async/await pattern to handle the promise returned by the fetch call
+  const fetchData = async () => {
+    try {
+      const response = await fetch(appLocalizer.apiUrl + "/wp/v2/taxonomies");
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  fetchData();
+}, []);
 
 
-  const url = `${appLocalizer.apiUrl}/wprk/v1/settings`;
-  const handleSubmit = (e) => {
-      e.preventDefault();
-      setLoader( 'Saving...' );
-      // console.log(inputFields[0]);
-      axios.post( url, contacts, {
-          headers: {
-              'content-type': 'application/json',
-              'X-WP-NONCE': appLocalizer.nonce
-          }
-      } )
-      .then( ( res ) => {
-          setLoader( 'Save Settings' );
-          window.location.reload(true);
+// Define a variable 'url' that contains the API endpoint for saving settings.
+const url = `${appLocalizer.apiUrl}/wprk/v1/settings`;
 
-      } )
+// Define a function 'handleSubmit' that makes a post request to the API when called.
+const handleSubmit = async (e) => {
+  e.preventDefault(); // prevent the form from submitting
+  setLoader('Saving...'); // update the text on a button or a span to 'Saving...'
+  try {
+    // Use axios to make a post request to the API with the specified contacts and headers
+    const response = await axios.post(url, contacts, {
+      headers: {
+        'content-type': 'application/json',
+        'X-WP-NONCE': appLocalizer.nonce
+      }
+    });
+    setLoader('Save Settings'); // update the text on a button or a span to 'Save Settings'
+    window.location.reload(true); // reload the page
+  } catch (error) {
+    console.error(error); // log the error to the console
   }
+}
 
-  const [contacts, setContacts] = useState();
-  const [information, setinformation] = useState();
-  useEffect( () => {
-      axios.get( url )
-      .then( ( res ) => {
-          setinformation(res.data.wprk_settings);
-          setContacts(res.data.wprk_settings);
-      }).catch((err) => {
-          console.log(err);
-      });
-  }, [] )
+// Use the useState hook to create a state variable 'contacts' and the setContacts function to update it
+const [contacts, setContacts] = useState();
+
+// Use the useState hook to create a state variable 'information' and the setInformation function to update it
+const [information, setInformation] = useState();
+
+// Use the useEffect hook to fetch data from the API when the component is loaded
+// This effect only runs once when the component is first loaded.
+useEffect(() => {
+  // use axios to make a get request to the specified url
+  axios
+    .get(url)
+    .then((res) => {
+      // update the 'information' state variable with the data from the API
+      setInformation(res.data.wprk_settings);
+      // update the 'contacts' state variable with the data from the API
+      setContacts(res.data.wprk_settings);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}, []);
 
 
-
-
+  // Use the useState hook to create a state variable
+  // 'addFormData'
+  // and the setAddFormData function to update it
   const [addFormData, setAddFormData] = useState({
     fullName: "",
     facetType: "",
@@ -109,7 +134,9 @@ const App = () => {
     wpcfSortBy: "",
   });
 
-
+  // Use the useState hook to create a state variable
+  // 'editFormData'
+  // and the setEditFormData function to update it
   const [editFormData, setEditFormData] = useState({
     fullName: "",
     facetType: "",
@@ -121,31 +148,41 @@ const App = () => {
     wpcfSortBy: "",
   });
 
+  // Use the useState hook to create a state variable 'editContactId' and the setEditContactId function to update it
   const [editContactId, setEditContactId] = useState(null);
 
+  // Handle change events for the add form
   const handleAddFormChange = (event) => {
-    event.preventDefault();
+      event.preventDefault();
 
-    const fieldName = event.target.getAttribute("name");
-    const fieldValue = event.target.value;
+      // Get the name and value of the input field that triggered the event
+      const fieldName = event.target.getAttribute("name");
+      const fieldValue = event.target.value;
 
-    const newFormData = { ...addFormData };
-    newFormData[fieldName] = fieldValue;
+      // Create a new object that is a copy of the current form data
+      const newFormData = { ...addFormData };
+      // Update the value of the field in the new object that corresponds to the input field that triggered the event
+      newFormData[fieldName] = fieldValue;
 
-    setAddFormData(newFormData);
+      // Update the form data state variable with the new object
+      setAddFormData(newFormData);
   };
 
-
+  // Handle change events for the edit form
   const handleEditFormChange = (event) => {
-    event.preventDefault();
+      event.preventDefault();
 
-    const fieldName = event.target.getAttribute("name");
-    const fieldValue = event.target.value;
+      // Get the name and value of the input field that triggered the event
+      const fieldName = event.target.getAttribute("name");
+      const fieldValue = event.target.value;
 
-    const newFormData = { ...editFormData };
-    newFormData[fieldName] = fieldValue;
+      // Create a new object that is a copy of the current form data
+      const newFormData = { ...editFormData };
+      // Update the value of the field in the new object that corresponds to the input field that triggered the event
+      newFormData[fieldName] = fieldValue;
 
-    setEditFormData(newFormData);
+      // Update the form data state variable with the new object
+      setEditFormData(newFormData);
   };
 
   const handleAddFormSubmit = (event) => {
@@ -220,23 +257,11 @@ const App = () => {
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
 
-    const editedContact = {
-      id: editContactId,
-      fullName: editFormData.fullName,
-      facetType: editFormData.facetType,
-      dataSource: editFormData.dataSource,
-      defaultLabel: editFormData.defaultLabel,
-      valueModifier: editFormData.valueModifier,
-      postsperpage: editFormData.postsperpage,
-      wpcfLogic: editFormData.wpcfLogic,
-      wpcfSortBy: editFormData.wpcfSortBy,
-    };
-
-    const newContacts = [...contacts];
-
     const index = contacts.findIndex((contact) => contact.id === editContactId);
 
-    newContacts[index] = editedContact;
+    const newContacts = [...contacts];
+    newContacts[index] = {...newContacts[index], ...editFormData};
+
     setaddClassEdit('saveClass')
     setParentClassEdit('app-container savingData');
     setContacts(newContacts);
@@ -247,36 +272,41 @@ const App = () => {
     event.preventDefault();
     setEditContactId(contact.id);
     setParentClassEdit('app-container updatingData');
-    setaddClassEdit('updateClass')
+    setaddClassEdit('updateClass');
 
-    const formValues = {
-      fullName: contact.fullName,
-      facetType: contact.facetType,
-      dataSource: contact.dataSource,
-      defaultLabel: contact.defaultLabel,
-      valueModifier: contact.valueModifier,
-      postsperpage: contact.postsperpage,
-      wpcfLogic: contact.wpcfLogic,
-      wpcfSortBy: contact.wpcfSortBy,
-    };
+    // extract the properties from the contact object that need to be used to populate the form
+    const { fullName, facetType, dataSource, defaultLabel, valueModifier, postsperpage, wpcfLogic, wpcfSortBy } = contact;
+
+    // create an object with the properties that will be used to set the form data
+    const formValues = { fullName, facetType, dataSource, defaultLabel, valueModifier, postsperpage, wpcfLogic, wpcfSortBy };
 
     setEditFormData(formValues);
   };
 
-  const handleCancelClick = () => {
+  // Function to handle the cancel button click event
+const handleCancelClick = () => {
+    // Reset the edit contact ID to null
     setEditContactId(null);
+    // Set the class for update button to 'noUpdate'
     setaddClassEdit('noUpdate')
+    // Set the parent container class to 'app-container noData'
     setParentClassEdit('app-container noData');
   };
 
-  const handleDeleteClick = (contactId) => {
+// Function to handle the delete button click event
+const handleDeleteClick = (contactId) => {
+    // Create a new array of contacts
     const newContacts = [...contacts];
 
+    // Find the index of the contact to be deleted
     const index = contacts.findIndex((contact) => contact.id === contactId);
 
+    // Remove the contact from the array using splice()
     newContacts.splice(index, 1);
+    // Set the parent container class to 'app-container noData'
     setParentClassEdit('app-container noData');
 
+    // Update the state with the new array of contacts
     setContacts(newContacts);
   };
 

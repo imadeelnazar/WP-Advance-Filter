@@ -271,7 +271,7 @@ if(!class_exists('wpAF_render')){
         function shortcode_html($atts,$content = null){
             $this->shortcode_atts[] = $atts;
 
-            return '<style>.af-woocommerce-link li,.af-woocommerce-link li ul{list-style:none;}.af-woocommerce-link{list-style:none;padding:0px;}</style>';
+            return '<style>.has-children ul{display:none;}.af-woocommerce-link li,.af-woocommerce-link li ul{list-style:none;}.af-woocommerce-link{list-style:none;padding:0px;}</style>';
         }
 
         /**
