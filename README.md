@@ -4,7 +4,7 @@ Plugin Help you filter posts, products events by categories, tags date and much 
 You can create custom filter by building custom query.
 
 
-## Requirements
+## Installation
 To install the dependencies for this project, you will need to have Node.js and npm (Node Package Manager) installed on your machine.
 
 1. First, clone the repository or download the project files to your local machine.
