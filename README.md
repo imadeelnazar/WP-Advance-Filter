@@ -5,7 +5,7 @@ You can create custom filter by building custom query.
 
 ## Installation
 
-1. Download the plugin files from the source, usually a zip file.
+1. Download the plugin files git repo.
 2. Log in to your WordPress admin dashboard and navigate to the "Plugins" section.
 3. Click on the "Add New" button to install a new plugin.
 4. Click on the "Upload Plugin" button and select the plugin files you downloaded earlier.
