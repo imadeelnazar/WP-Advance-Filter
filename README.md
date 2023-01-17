@@ -3,26 +3,40 @@
 Plugin Help you filter posts, products events by categories, tags date and much more.
 You can create custom filter by building custom query.
 
+
 ## Requirements
+To install the dependencies for this project, you will need to have Node.js and npm (Node Package Manager) installed on your machine.
 
-Install the module bundler Webpack v4+
-
-```
-npm install my-webpack-project
-```
-
-## Installation
-
-1. Clone the repository to the Plugins directory of your WordPress installation: `/ wp-content / plugins /` .
-
-2. Install the dependencies :
+1. First, clone the repository or download the project files to your local machine.
+2. Navigate to the project directory in your terminal.
+3. Run the command npm install to install all the dependencies listed in the package.json file.
+4. Once the installation is complete, you can run the command 
 
 ```
-  $ npm install
+npm run start 
 ```
 
-**and that's all!** :+1: you will have a new directory at the root of your plugin: `dist` which contains the compiled javascript file.
-now you can create your JSX components, and when you're ready, rerun ` $ webpack`.
+to start the development server and see the project in your browser.
+5. To build the production version of the project, run the command 
+
+```
+npm run build.
+```
+
+6. To run the test run the command 
+
+```
+npm run test.
+```
+
+7. To eject the project run the command 
+
+```
+npm run eject
+```
+
+Note: You may need to configure your development environment for webpack if you have not used it before. Additionally, the version of the dependencies installed may vary based on the time.
+
 
 ## View
 
