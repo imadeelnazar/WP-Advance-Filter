@@ -410,7 +410,7 @@ const handleDeleteClick = (contactId) => {
         dataType_o={dataType_o}
         categories={categories}
       />
-      <strong className="footer-pull-right">Design and Developed by <a href="">WPScience</a></strong>
+      <strong className="footer-pull-right">Design and Developed by <a href="#">WPScience</a></strong>
     </div>
   );
 };
