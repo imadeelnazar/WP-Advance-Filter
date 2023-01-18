@@ -23,10 +23,6 @@ if(!class_exists('wpAF_render')){
             add_filter('do_shortcode_tag', array($this,'render_shortcodes'), 10, 2);
             add_action('pre_get_posts',array($this,'filtered_data'));
 
-
-
-
-
         }
 
         /**
@@ -69,10 +65,10 @@ if(!class_exists('wpAF_render')){
             foreach($this->data as $key => $items){
                 if($tag == $items['fullName']){
 
-                    $html .= '<form method="POST" data-action="filter_products_list" data-security="' . wp_create_nonce('form-create-nonce') . '" data-ajax="'.admin_url('admin-ajax.php').'" id="wpaf-form">';
+                    $html .= '<form data-type="'.esc_attr($items['facetType']).'" data-source="'.esc_attr($items['dataSource']).'" data-url="'.esc_url( $current_url ).'" method="POST" data-action="filter_products_list" data-security="' . wp_create_nonce('form-create-nonce') . '" data-ajax="'.admin_url('admin-ajax.php').'" id="wpaf-form">';
 
-                    // echo '<pre>';print_r($wp_query);
                     $html.='<input type="hidden" name="afTaxonomy" value="'.esc_attr($items['dataSource']).'" />';
+
                     $taxonomies = get_terms( $items['dataSource'], array(
                         'hide_empty' => false,
                     ) );
@@ -223,6 +219,7 @@ if(!class_exists('wpAF_render')){
 
                 if(isset($_POST['afCategory']) && $_POST['afCategory'] <> ''){
                     $query->set('tax_query', array(
+                        'relation' => 'AND',
                         array (
                             'taxonomy' => $_POST['afTaxonomy'],
                             'field' => 'slug',
@@ -236,6 +233,7 @@ if(!class_exists('wpAF_render')){
                 $query->set( 'orderby', 'data' );
                 $query->set( 'order', 'DESC' );
                 $query->set( 'posts_per_page', 12 );
+
             }
         }
 

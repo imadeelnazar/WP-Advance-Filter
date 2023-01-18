@@ -55,43 +55,63 @@ function wpaf_enqueue_scripts() {
 
 
 
+// Add an action for the 'filter_products_list' AJAX request for logged-in users
+add_action( 'wp_ajax_filter_products_list', 'filter_products_list_callback' );
 
-
-add_action('wp_ajax_filter_products_list', 'filter_products');
-add_action('wp_ajax_nopriv_filter_products_list', 'filter_products');
+// Add an action for the 'filter_products_list' AJAX request for non-logged-in users
+add_action( 'wp_ajax_nopriv_filter_products_list', 'filter_products_list_callback' );
 
 /**
-* Filter Products
-* @since 1.0
-*/
-function filter_products() {
+ * Callback function for the 'filter_products_list' AJAX request
+ *
+ * @param 	none
+ * @return 	void
+ */
+
+function filter_products_list_callback() {
     if( wp_verify_nonce( $_POST['_wpnonce'], 'form-create-nonce' ) ){
          global $wp_query,$wp;
 
-            // get current url with query string.
-            $current_url =  home_url( $wp->request );
+        // get current url with query string.
+
         $taxonomies = $_POST['option']; // Associative array of taxonomy=>taxonomy term slugs passed from the Ajax call
+        $url = $_POST['url']; // Fetch Page URL
         $tax_query = array(); // Initialize an empty array to store taxonomy query
         $tax_count = 0; // To count the number of taxonomies passed as a relation parameter needs to be passed if there are more than 1
-
+        $post_per_page = 10;
         // Default arguments array
         $args = array(
             'post_type' => 'product',
-            'posts_per_page' => '-1'
+            'posts_per_page' => $post_per_page
         );
 
         // Loop through the posted taxonomies
         foreach ($taxonomies as $taxonomy) { // Iterate through the taxonomies
             if ($taxonomy["value"] != "") { // Only if value is present for taxonomy
                 if($taxonomy["name"] === 'afCategory[]'){
-                    array_push($tax_query, array('taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => $taxonomy['value'])); // Push the taxonomy query to the array
+                    array_push($tax_query, array('taxonomy' => $_POST['taxonomy'], 'field' => 'slug', 'terms' => $taxonomy['value'])); // Push the taxonomy query to the array
                     if ($tax_count > 0) $tax_query['relation'] = 'AND'; // Add 'relation' parameter if more than one
                     $tax_count++; // Increment counter
                 }
             }
         }
-        $args['paged'] = (get_query_var('paged'))? get_query_var('paged') : get_query_var('page');
-		$args['paged'] = empty($args['paged'])? 1: $args['paged'];
+        if( isset( $_POST['pager'] ) && $_POST['pager'] <> ''){
+            if( is_numeric($_POST['pager']) ){
+                $args['paged'] = $_POST['pager'];
+            }else{
+                // Parse the URL into its components
+                $url = parse_url($_POST['pager_url']);
+
+                $findnumeric_value =  preg_replace("/[^0-9]/", "" , $url);
+
+                $args['paged'] = $findnumeric_value['path'];
+
+            }
+
+        }else{
+            $args['paged'] = (get_query_var('paged'))? get_query_var('paged') : get_query_var('page');
+            $args['paged'] = empty($args['paged'])? 1: $args['paged'];
+        }
 
         // Add taxonomy query if array is not empty
         if(!empty($tax_query)) {
@@ -100,6 +120,8 @@ function filter_products() {
 
         $woo_posts = new WP_Query($args);
         $response = ""; // Initialize empty response string
+        $pagination = ''; // Initialize empty Pagination string
+        $total = $woo_posts->found_posts;
 
         if ($woo_posts->have_posts()) {
             $class = 'product-cart';
@@ -142,32 +164,101 @@ function filter_products() {
                 $product );
                 $response .=  '</li>';
             }
+
             //$response .= wpaf_get_pagination($woo_posts->max_num_pages,'',$args['paged'],$current_url);
+            $pagination .= wp_custom_pagination($woo_posts->max_num_pages,$args,'',$url);
         } else {
             $response = "No products found.";
         }
 
-        echo json_encode($response); // Echo the response
+
+        if ( 1 === intval( $total ) ) {
+            $newtag_html = __( 'Showing the single result', 'woocommerce' );
+        } elseif ( $total <= $post_per_page || -1 === $post_per_page ) {
+            /* translators: %d: total results */
+            $newtag_html = sprintf( _n( 'Showing all %d result', 'Showing all %d results', $total, 'woocommerce' ), $total );
+        } else {
+            $first = ( $post_per_page * $args['paged'] ) - $post_per_page + 1;
+            $last  = min( $total, $post_per_page * $args['paged'] );
+            /* translators: 1: first result 2: last result 3: total results */
+            $newtag_html = sprintf( _nx( 'Showing %1$d-%2$d of %3$d result', 'Showing %1$d-%2$d of %3$d results', $total, 'with first and last result', 'woocommerce' ), $first, $last, $total );
+        }
+
+
+        $arr = array();
+        $arr[0] = $newtag_html;
+        $arr[1] = $response;
+        $arr[2] = $pagination;
+
+        echo json_encode($arr);
         wp_reset_postdata();
         exit; // this is required to terminate immediately and return a proper response
     }
 }
 
-function wpaf_get_pagination($max_num_page, $current_page, $format = 'paged',$current_url){
+function wp_custom_pagination($max_num_pages, $args = [], $class = 'pagination',$url) {
+
     global $wp_rewrite;
 
-    if( $max_num_page <= 1 ) return '';
-
-    $big = 999999999; // need an unlikely integer
-
     // Again - hard coded, you should make it dynamic though
-    $base = trailingslashit( $current_url ) . "{$wp_rewrite->pagination_base}/%#%/";
-    return '<div class="mypagination">' . paginate_links( array(
+
+    $jquery_code = "<script>
+    jQuery(document).ready(function($){
+    $('.wpaf-page-numbers a').on('click',function(e) {
+            e.preventDefault();
+            var admin_form = $('#wpaf-form');
+            var data_source = admin_form.attr('data-source');
+            var ajax_url = admin_form.attr('data-ajax');
+            var nonce = admin_form.attr('data-security');
+            var url = admin_form.attr('data-url');
+            var action = 'afpagination';
+            var pager = $(this).text();
+            var pager_url = $(this).attr('href');
+
+            $.ajax({
+                type: 'POST',
+                url: ajax_url,
+                dataType : 'json',
+                data: { 'taxonomy':data_source, '_wpnonce': nonce, 'action': action,'option': admin_form.serializeArray(),'pager':pager,'pager_url':pager_url },
+                success: function(response) {
+                    $('.woocommerce-result-count').text(response[0]);
+                    $('.wpaf-pagination-wrap').remove();
+					$('.woocommerce-pagination').remove();
+					$('.products').html(response[1]);
+                    $('.products').parent().append(response[2]);
+                }
+            })
+        })
+    })</script><style>.wpaf-pagination-wrap .wpaf-page-numbers{text-align: center;}</style>";
+    $script_jquery = str_replace(array("\r\n", "\r", "\n"), '', $jquery_code);
+
+    $base = trailingslashit( $url ) . "{$wp_rewrite->pagination_base}/%#%/";
+    return '<div class="wpaf-pagination-wrap">'.$script_jquery . '<div class="wpaf-page-numbers">' . paginate_links( array(
         'base' => $base,
         'format' => '?paged=%#%',
-        'current' => max( 1, $current_page ),
-        'total' => $max_num_page,
-        'prev_text'=> esc_html__('&lsaquo; Previous', 'kickoff'),
-        'next_text'=> esc_html__('Next &rsaquo;', 'kickoff')
-    ) ) . '</div>';
+        'current' => max( 1, $args['paged'] ),
+        'show_all' => false,
+        'total' => $max_num_pages,
+        'mid_size' => 0,
+        'end_size' => 3,
+    ) ) . '</div></div>';
+
+}
+
+
+// Add an action for the 'afpagination' AJAX request for logged-in users
+add_action( 'wp_ajax_afpagination', 'filter_products_list_callback' );
+
+// Add an action for the 'afpagination' AJAX request for non-logged-in users
+add_action( 'wp_ajax_nopriv_afpagination', 'filter_products_list_callback' );
+
+/**
+ * Callback function for the 'afpagination' AJAX request
+ *
+ * @param 	none
+ * @return 	void
+ */
+
+function afpagination_callback(){
+
 }
