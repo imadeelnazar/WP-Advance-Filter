@@ -171,7 +171,7 @@ if(!class_exists('wpAF_render')){
                     if(isset($_POST['afCategory']) && $_POST['afCategory'] <> ''){
                         $html.='<a class="btn-clear" href="'.esc_url($current_url).'">Clear</a>';
                     }
-                    $html .= '<input type="submit" class="submit-n" value="submit">';
+                    $html .= '<input type="submit" class="submit-n button wp-element-button  product_type_product-cart" value="submit">';
                     $html .= '</form>';
                 }
             }
