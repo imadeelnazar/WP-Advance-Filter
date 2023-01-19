@@ -68,3 +68,32 @@ div[open].dialog-box-alert .dialog-box-inner{
 .dialog-no{
     margin-right:5px;
 }
+.logo-branding a{
+    margin-right:15px;
+    text-decoration: none;
+}
+.topbar-main {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #aaa;
+    align-items: center;
+}
+.logo-branding {
+    margin-right: 15px;
+}
+ul.navn {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+}
+.navn li {
+    padding: 10px 15px;
+    margin-bottom: 0;
+}
+
+.navn li a{
+    text-decoration: none;
+}

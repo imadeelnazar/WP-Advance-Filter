@@ -4,14 +4,7 @@
 	flex-direction: column;
 	margin: -10px -20px 0px -20px;
 }
-.top-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 20px;
-    background-color: #fff;
-    border-bottom: 1px solid #aaa;
-    align-items: center;
-}
+
 .topbar-left,
 .nav{
 	display: flex;

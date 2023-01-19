@@ -1,12 +1,10 @@
 import React, { useState, Fragment, useEffect } from "react";
 import axios from 'axios';
 import { nanoid } from "nanoid";
-
-import "./App.css";
-
 import AFNewForm from "./components/AFNewForm";
 import ReadOnlyRow from "./components/ReadOnlyRow";
 import EditableRow from "./components/EditableRow";
+
 
 const App = () => {
 
@@ -70,7 +68,7 @@ useEffect(() => {
       console.error(error);
     }
   };
-  fetchData();
+fetchData()
 }, []);
 
 
@@ -90,7 +88,7 @@ const handleSubmit = async (e) => {
       }
     });
     setLoader('Save Settings'); // update the text on a button or a span to 'Save Settings'
-    window.location.reload(true); // reload the page
+
   } catch (error) {
     console.error(error); // log the error to the console
   }
@@ -338,24 +336,14 @@ const handleDeleteClick = (contactId) => {
 
   return (
     <div className={addParentClassEdit}>
-      <div className="top-row">
-        <div className="topbar-left">
-        <div className=""><a href="">WP AdvanceFilter</a><span>Version 1.0</span></div>
-        <ul className="nav">
-          <li>Advance Filter</li>
-          <li>Settings</li>
-          <li>Support</li>
-        </ul>
-        </div>
-        <div className="topbar-right">
-          <button onClick={handleSubmit}>{loader}</button>
-        </div>
-      </div>
       <div className="middle-wrap">
         <h4 className="wp-af-heading">WP AdvanceFilter</h4>
         <button className="add-new-btn-submit" type="submit" onClick={handleAddNewFormClick}>Add New</button>
         <button className="cancel-btn" type="submit" onClick={handleCancelFormClick}>Cancel</button>
         <button className="cancel-btn-edit" type="button" onClick={handleCancelClick}>Cancel</button>
+        <div className="topbar-right">
+          <button onClick={handleSubmit}>{loader}</button>
+        </div>
       </div>
       <form className="edit-form" onSubmit={handleEditFormSubmit}>
         <div className={addClassEdit}>
