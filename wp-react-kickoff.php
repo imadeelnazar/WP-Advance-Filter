@@ -262,3 +262,10 @@ add_action( 'wp_ajax_nopriv_afpagination', 'filter_products_list_callback' );
 function afpagination_callback(){
 
 }
+
+
+// add_action('init', 'wp55290310_rewrite_rules');
+
+// function wp55290310_rewrite_rules() {
+//     add_rewrite_rule('^react-plugin-one/(.+)?', 'index.php?pagename=wprk-settings', 'top');
+// }
