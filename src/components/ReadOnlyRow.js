@@ -1,16 +1,25 @@
 import React, {useState} from "react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-
 
 const ReadOnlyRow = ({ contact, handleEditClick, handleDeleteClick, handleClickOpen }) => {
-
+  const _ref = React.useRef();
+  const handleClick = (e) => {
+    e.preventDefault();
+    _ref.current.select();
+    _ref.current.focus();
+    if (window.isSecureContext && navigator.clipboard) {
+      navigator.clipboard.writeText(_ref.current.value);
+    } else {
+      document.execCommand('copy');
+    }
+  }
   return (
     <div className="wp-category-form-wrap-static" key={Math.random()}>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.fullName}</div>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.facetType}</div>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.dataSource}</div>
-        <div><code><CopyToClipboard text={"[wpaf_" + contact.fullName+"]"} onCopy={() => alert('Shortcode Copied')}>
-        <span>{"[" + contact.fullName+"]"}</span></CopyToClipboard></code></div>
+        <div>
+          <code onClick={handleClick}><input readOnly ref={_ref} type="text" defaultValue={contact.fullName} /></code>
+          </div>
       <div>
         <button type="button" onClick={() => handleClickOpen(contact.id)}>
           X

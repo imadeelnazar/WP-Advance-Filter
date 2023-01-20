@@ -4,7 +4,6 @@
 	flex-direction: column;
 	margin: -10px -20px 0px -20px;
 }
-
 .topbar-left,
 .nav{
 	display: flex;
@@ -107,4 +106,19 @@ strong.footer-pull-right {
 .wp-category-item-field input {
 	width: 220px;
 	height: 38px;
+}
+.template-main-wrapper{
+	float:left;
+	width: 100%;
+	position: relative;
+	padding:30px;
+	overflow: hidden;
+}
+.template-main-wrapper .preset{
+	width:33%;
+	float:left;
+
+}
+.template-main-wrapper .preset img{
+	width:100%;
 }
