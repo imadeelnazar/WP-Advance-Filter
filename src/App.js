@@ -1,4 +1,5 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, Fragment, useEffect, useRef } from "react";
+
 import axios from 'axios';
 import { nanoid } from "nanoid";
 import AFNewForm from "./components/AFNewForm";
@@ -73,7 +74,7 @@ fetchData()
 
 
 // Define a variable 'url' that contains the API endpoint for saving settings.
-const url = `${appLocalizer.apiUrl}/wprk/v1/settings`;
+const url = `${appLocalizer.apiUrl}/wpaf/v1/settings`;
 
 // Define a function 'handleSubmit' that makes a post request to the API when called.
 const handleSubmit = async (e) => {
@@ -108,9 +109,9 @@ useEffect(() => {
     .get(url)
     .then((res) => {
       // update the 'information' state variable with the data from the API
-      setInformation(res.data.wprk_settings);
+      setInformation(res.data.wpaf_settings);
       // update the 'contacts' state variable with the data from the API
-      setContacts(res.data.wprk_settings);
+      setContacts(res.data.wpaf_settings);
     })
     .catch((err) => {
       console.log(err);
@@ -153,6 +154,7 @@ useEffect(() => {
   const handleAddFormChange = (event) => {
       event.preventDefault();
 
+
       // Get the name and value of the input field that triggered the event
       const fieldName = event.target.getAttribute("name");
       const fieldValue = event.target.value;
@@ -164,6 +166,7 @@ useEffect(() => {
 
       // Update the form data state variable with the new object
       setAddFormData(newFormData);
+
   };
 
   // Handle change events for the edit form
@@ -316,6 +319,18 @@ const handleDeleteClick = (contactId) => {
     setParentClassEdit('app-container');
   }
 
+  const _ref = useRef();
+  const handleClickCopy = (e) => {
+    e.preventDefault();
+    _ref.current.select();
+    _ref.current.focus();
+    if (window.isSecureContext && navigator.clipboard) {
+      navigator.clipboard.writeText(_ref.current.value);
+    } else {
+      document.execCommand('copy');
+    }
+  }
+
   const dataType_o = [
       { value: 'link', label: 'Link' },
       { value: 'dropdown', label: 'Dropdown' },
@@ -338,11 +353,11 @@ const handleDeleteClick = (contactId) => {
     <div className={addParentClassEdit}>
       <div className="middle-wrap">
         <h4 className="wp-af-heading">WP AdvanceFilter</h4>
-        <button className="add-new-btn-submit" type="submit" onClick={handleAddNewFormClick}>Add New</button>
+        <button className="add-new-btn-submit btn-submit" type="submit" onClick={handleAddNewFormClick}>Add New</button>
         <button className="cancel-btn" type="submit" onClick={handleCancelFormClick}>Cancel</button>
         <button className="cancel-btn-edit" type="button" onClick={handleCancelClick}>Cancel</button>
         <div className="topbar-right">
-          <button onClick={handleSubmit}>{loader}</button>
+          <button className="btn-submit" onClick={handleSubmit}>{loader}</button>
         </div>
       </div>
       <form className="edit-form" onSubmit={handleEditFormSubmit}>
@@ -398,7 +413,7 @@ const handleDeleteClick = (contactId) => {
         dataType_o={dataType_o}
         categories={categories}
       />
-      <strong className="footer-pull-right">Design and Developed by <a href="#">WPScience</a></strong>
+      <strong className="footer-pull-right">Design and Developed by <a href="https://wpscience.com">WPScience</a></strong>
     </div>
   );
 };

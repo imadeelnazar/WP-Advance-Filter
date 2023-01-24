@@ -1,41 +1,107 @@
-import React from 'react';
-import logo from './img/img1.jpg'; // Tell webpack this JS file uses this image
-import Sortable from 'react-sortablejs';
+import React,{useEffect, useState} from 'react';
+import axios from 'axios';
+import { ReactSortable } from "react-sortablejs";
 
-const _array = ["Image","Title","Description"]
+import placeholder from './img/placeholder-image.jpg'; // Tell webpack this JS file uses this image
 
 const Template = () => {
-  const [data, setData] = React.useState(_array);
-  const handleItem = (a,value) => {
-    if (a < data.length) {
-      var _data = data;
-      _data.splice(a-1,1)
-      _data.splice(a,0,value);
-      setData([..._data]);
-    }
+  const [ loader, setLoader ] = useState( 'Save Templates' );
+  const [preset, setPreset] = React.useState([
+    { id: 1, pre_type: "simple" },
+    { id: 2, pre_type: "modern" },
+    { id: 3, pre_type: "classic" },
+    { id: 4, pre_type: "vintage" },
+    { id: 5, pre_type: "popular" },
+  ]);
+
+  const [state, setState] = React.useState([
+    { id: 1, type: "image", content: 'Dummy Image' },
+    { id: 2, type: "title", content: 'Dummy Title' },
+    { id: 3, type: "description", content: 'This is dummy description' },
+    { id: 4, type: "author", content: 'Author Name' },
+    { id: 5, type: "readmore", content: 'Read More' },
+    { id: 6, type: "category", content: 'Category' },
+    { id: 7, type: "price", content: 'Price' },
+  ]);
+
+  // Define a variable 'url' that contains the API endpoint for saving templates.
+const url = `${appLocalizer.apiUrl}/wpaf/v1/templates`;
+
+// Define a function 'handleSubmit' that makes a post request to the API when called.
+const handleSubmit = async (e) => {
+  e.preventDefault(); // prevent the form from submitting
+  setLoader('Saving...'); // update the text on a button or a span to 'Saving...'
+  try {
+    // Use axios to make a post request to the API with the specified contacts and headers
+    const response = await axios.post(url, state, {
+      headers: {
+        'content-type': 'application/json',
+        'X-WP-NONCE': appLocalizer.nonce
+      }
+    });
+    setLoader('Save Templates'); // update the text on a button or a span to 'Save templates'
+
+  } catch (error) {
+    console.error(error); // log the error to the console
   }
+}
+
+// Use the useEffect hook to fetch data from the API when the component is loaded
+// This effect only runs once when the component is first loaded.
+useEffect(() => {
+  // use axios to make a get request to the specified url
+  axios
+    .get(url)
+    .then((res) => {
+      // update the 'contacts' state variable with the data from the API
+      setState(res.data.wpaf_templates);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}, []);
+
   return (
 
     <div className="template-main-wrapper">
-        {data && data.map((item,k) =>
-          <div onClick={(e) => handleItem(k+1,item)} key={k}>{item}</div>
-          )}
-
-        <div className="preset">
-          <div className="af-image"><img src={logo} alt="abc" /></div>
-          <div className="af-content">
-            <div className="af-title">Title</div>
-            <div className="af-des">description</div>
-          </div>
-          <div className="af-post-meta">
-            <div className="af-author">Author</div>
-            <div className="af-date">Date</div>
-            <div className="af-time">Time</div>
-            <div className="af-price">$250</div>
-          </div>
-          <div className="af-read-more-or-add-to-cart">Read More</div>
+        <button className="btn-submit" onClick={handleSubmit}>{loader}</button>
+        <div className='preset-wrap'>
+        {preset && preset.map((main) => (
+        <div key={main.id} className="preset">
+          <label>
+            <input type="radio" name="preset_template" />
+            {main.pre_type}
+          </label>
+          <ReactSortable
+            animation={250}
+            delayOnTouchStart={true}
+            delay={3}
+            className="preset-inner"
+            list={state}
+            setList={setState}>
+             {state && state.map((item) => (
+              <div key={item.id + main.id} className={"preset-item " + item.type}>
+                {(item.type === 'image' && (
+                <img className="item-n-ele" src={placeholder} alt={item.type} />)
+                ) || (item.type === 'title' && (
+                  <div className={"item-n-ele n-shop-" + item.type }>{item.content}</div>
+                )) || (item.type === 'description' && (
+                  <div className={"item-n-ele n-shop-" + item.type }>{item.content}</div>
+                )) || (item.type === 'author' && (
+                  <div className={"item-n-ele n-shop-" + item.type }>{item.content}</div>
+                )) || (item.type === 'readmore' && (
+                  <div className={"item-n-ele n-shop-" + item.type }>{item.content}</div>
+                )) || (item.type === 'category' && (
+                  <div className={"item-n-ele n-shop-" + item.type }>{item.content}</div>
+                )) || (item.type === 'price' && (
+                  <div className={"item-n-ele n-shop-" + item.type }>{item.content}</div>
+                ))}
+              </div>
+             ))}
+          </ReactSortable>
         </div>
-
+        ))}
+        </div>
     </div>
 
   )

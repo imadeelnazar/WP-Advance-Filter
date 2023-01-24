@@ -17,7 +17,7 @@ if(!class_exists('wpAF_render')){
          * @since 1.0
          */
         function __construct() {
-            $this->data = get_option('wprk_settings');
+            $this->data = get_option('wpaf_settings');
 
             add_action('init',array($this,'create_shortcode'));
             add_filter('do_shortcode_tag', array($this,'render_shortcodes'), 10, 2);
