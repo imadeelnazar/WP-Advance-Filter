@@ -6,8 +6,8 @@ import RoutesLink from "./RoutesLink";
 
 
 document.addEventListener( 'DOMContentLoaded', function() {
-    var element = document.getElementById( 'wprk-admin-app' );
+    var element = document.getElementById( 'wpaf-admin-app' );
     if( typeof element !== 'undefined' && element !== null ) {
-        ReactDOM.render( <RoutesLink />, document.getElementById( 'wprk-admin-app' ) );
+        ReactDOM.render( <RoutesLink />, document.getElementById( 'wpaf-admin-app' ) );
     }
 } )

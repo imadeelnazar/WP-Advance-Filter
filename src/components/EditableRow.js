@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import React, {useState,useRef,useEffect} from "react";
+
 
 const EditableRow = ({
   editFormData,
@@ -8,6 +8,30 @@ const EditableRow = ({
   handleDataType
 }) => {
   const [isOpen, setisOpen] = useState(false)
+  const _ref = useRef();
+  const handleClickCopy = (e) => {
+    e.preventDefault();
+    _ref.current.select();
+    _ref.current.focus();
+    if (window.isSecureContext && navigator.clipboard) {
+      navigator.clipboard.writeText(_ref.current.value);
+      setisOpen(true);
+    } else {
+      document.execCommand('copy');
+      setisOpen(true);
+    }
+  }
+    const handleClose = () => {
+    setisOpen(false);
+  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setisOpen(false);
+      console.log('copied')
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
         <div className="wp-category-form-wrap wp-category-form-wrap-dynamic">
           <div className="wp-category-item-field">
@@ -21,10 +45,7 @@ const EditableRow = ({
               value={editFormData.fullName}
               onChange={handleEditFormChange}
             ></input>
-            {editFormData.fullName &&
-            <code className="short-code"><CopyToClipboard text={"[wpaf_" + editFormData.fullName+"]"} onCopy={() => alert("Shortcode Copied")}>
-        <span>{"[" + editFormData.fullName+"]"}</span></CopyToClipboard></code>
-            }
+            <code onClick={handleClickCopy}><input readOnly ref={_ref} type="text" defaultValue={editFormData.fullName} /></code>
             </div>
           </div>
           <div className="wp-category-item-field">
@@ -101,8 +122,15 @@ const EditableRow = ({
             </select>
             </div>
           </div>
-          <button type="submit">Update</button>
-
+          <button className="btn-submit" type="submit">Update</button>
+<div onClick={handleClose} className="dialog-box" open={isOpen}>
+        <div className="dialog-box-inner">
+          <h3>Shortcode is copied!</h3>
+          <p className="alert-dialog-description">
+          Paste this shortcode anywhere on frontend.
+          </p>
+        </div>
+      </div>
         </div>
   );
 };

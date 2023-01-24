@@ -9,22 +9,34 @@ class WP_React_Settings_Rest_Route {
     }
 
     public function create_rest_routes() {
-        register_rest_route( 'wprk/v1', '/settings', [
+        register_rest_route( 'wpaf/v1', '/settings', [
             'methods' => 'GET',
             'callback' => [ $this, 'get_settings' ],
             'permission_callback' => [ $this, 'get_settings_permission' ]
         ] );
-        register_rest_route( 'wprk/v1', '/settings', [
+        register_rest_route( 'wpaf/v1', '/settings', [
             'methods' => 'POST',
             'callback' => [ $this, 'save_settings' ],
             'permission_callback' => [ $this, 'save_settings_permission' ]
         ] );
+
+       register_rest_route( 'wpaf/v1', '/templates', [
+            'methods' => 'GET',
+            'callback' => [ $this, 'get_templates' ],
+            'permission_callback' => [ $this, 'get_templates_permission' ]
+        ] );
+        register_rest_route( 'wpaf/v1', '/templates', [
+            'methods' => 'POST',
+            'callback' => [ $this, 'save_templates' ],
+            'permission_callback' => [ $this, 'save_templates_permission' ]
+        ] );
+
     }
 
     public function get_settings() {
-        $wprk_settings = get_option( 'wprk_settings' );
+        $wpaf_settings = get_option( 'wpaf_settings' );
         $response = [
-            'wprk_settings' => $wprk_settings,
+            'wpaf_settings' => $wpaf_settings,
         ];
 
         return rest_ensure_response( $response );
@@ -37,13 +49,43 @@ class WP_React_Settings_Rest_Route {
     public function save_settings( $req ) {
 
 
-        update_option( 'wprk_settings', $req->get_params() );
+        update_option( 'wpaf_settings', $req->get_params() );
 
         return rest_ensure_response( 'success' );
 
     }
 
     public function save_settings_permission() {
+        return current_user_can( 'publish_posts' );
+    }
+
+
+
+
+
+    public function get_templates() {
+        $wpaf_templates = get_option( 'wpaf_templates' );
+        $response = [
+            'wpaf_templates' => $wpaf_templates,
+        ];
+
+        return rest_ensure_response( $response );
+    }
+
+    public function get_templates_permission() {
+        return true;
+    }
+
+    public function save_templates( $req ) {
+
+
+        update_option( 'wpaf_templates', $req->get_params() );
+
+        return rest_ensure_response( 'success' );
+
+    }
+
+    public function save_templates_permission() {
         return current_user_can( 'publish_posts' );
     }
 }

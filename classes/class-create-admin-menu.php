@@ -3,7 +3,7 @@
  * This file will create admin menu page.
  */
 
-class WPRK_Create_Admin_Page {
+class WPAF_Create_Admin_Page {
 
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'create_admin_menu' ] );
@@ -11,7 +11,7 @@ class WPRK_Create_Admin_Page {
 
     public function create_admin_menu() {
         $capability = 'manage_options';
-        $slug = 'wprk-settings';
+        $slug = 'wpaf-settings';
 
         add_menu_page(
             __( 'WP AdvanceFilter', 'category-index-wp' ),
@@ -24,10 +24,10 @@ class WPRK_Create_Admin_Page {
     }
 
     public function menu_page_template() {
-        // $dd = get_option('wprk_settings_ciwp_title');
+        // $dd = get_option('wpaf_settings_ciwp_title');
         // print_r($dd);
-        echo '<div class="wrap"><div id="wprk-admin-app"></div></div>';
+        echo '<div class="wrap"><div id="wpaf-admin-app"></div></div>';
     }
 
 }
-new WPRK_Create_Admin_Page();
+new WPAF_Create_Admin_Page();

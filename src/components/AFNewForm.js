@@ -1,7 +1,11 @@
 import React from "react";
 
+
 const AFNewForm = ({ addFormData, handleAddFormSubmit, handleAddFormChange, dataType_o, categories }) => {
+
+
   return (
+
         <form className="add-form">
         {/* {(evnt)=>handleChange(index, evnt)} */}
         <div className="wp-category-form-wrap">
@@ -92,7 +96,7 @@ const AFNewForm = ({ addFormData, handleAddFormSubmit, handleAddFormChange, data
             </select>
             </div>
           </div>
-          <button onClick={handleAddFormSubmit} type="submit">Save Filter</button>
+          <button className="btn-submit" onClick={handleAddFormSubmit} type="submit">Save Filter</button>
         </div>
       </form>
   );
