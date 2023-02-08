@@ -154,7 +154,6 @@ useEffect(() => {
   const handleAddFormChange = (event) => {
       event.preventDefault();
 
-
       // Get the name and value of the input field that triggered the event
       const fieldName = event.target.getAttribute("name");
       const fieldValue = event.target.value;
@@ -317,18 +316,6 @@ const handleDeleteClick = (contactId) => {
 
   const handleCancelFormClick = () => {
     setParentClassEdit('app-container');
-  }
-
-  const _ref = useRef();
-  const handleClickCopy = (e) => {
-    e.preventDefault();
-    _ref.current.select();
-    _ref.current.focus();
-    if (window.isSecureContext && navigator.clipboard) {
-      navigator.clipboard.writeText(_ref.current.value);
-    } else {
-      document.execCommand('copy');
-    }
   }
 
   const dataType_o = [
