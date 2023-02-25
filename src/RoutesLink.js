@@ -5,12 +5,12 @@ import Template from './Template'
 import Filter from './Filter'
 
 const RoutesLink = () => {
-  const location = window.location;
+  const location = useLocation();
   const { pathname } = location;
-  console.log(pathname)
   const splitLocation = pathname.split("/");
+  console.log(splitLocation)
   return (
-  <HashRouter>
+  <React.Fragment>
     <div className="topbar-main">
       <ul className="navn">
         <li>Advance Filter</li>
@@ -25,7 +25,7 @@ const RoutesLink = () => {
       <Route path="/filter" element={<Filter />} />
       <Route path="/template" element={<Template />} />
     </Routes>
-  </HashRouter>
+  </React.Fragment>
   );
 }
 export default RoutesLink;
