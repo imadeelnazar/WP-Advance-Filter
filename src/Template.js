@@ -2,7 +2,6 @@ import React,{useEffect, useState} from 'react';
 import axios from 'axios';
 import Sortable from './components/Sortable';
 
-import placeholder from './img/placeholder-image.jpg'; // Tell webpack this JS file uses this image
 
 const Template = () => {
   const [ loader, setLoader ] = useState( 'Save Templates' );

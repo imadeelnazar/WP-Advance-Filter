@@ -1,5 +1,6 @@
 import React from 'react'
 import { ReactSortable } from "react-sortablejs";
+import placeholder from './img/placeholder-image.jpg'; 
 
 const Sortable = ({ main }) => {
   const [state, setState] = React.useState([
