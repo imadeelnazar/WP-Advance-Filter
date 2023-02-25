@@ -8,7 +8,7 @@ const Sortable = ({main}) => {
   const [state, setState] = React.useState([
     { id: 1, type: "image", content: 'Dummy Image' },
     { id: 2, type: "title", content: 'Dummy Title' },
-    { id: 3, type: "description", content: 'This is dummy description' },
+    { id: 3, type: "description", content: 'This is dumddmy description' },
     { id: 4, type: "author", content: 'Author Name' },
     { id: 5, type: "readmore", content: 'Read More' },
     { id: 6, type: "category", content: 'Category' },
