@@ -10,7 +10,7 @@ const RoutesLink = () => {
   const splitLocation = pathname.split("/");
   console.log(splitLocation)
   return (
-  <HashRouter>
+  <React.Fragment>
     <div className="topbar-main">
       <ul className="navn">
         <li>Advance Filter</li>
@@ -21,11 +21,11 @@ const RoutesLink = () => {
       <div className="logo-branding"><a href="">WP AdvanceFilter</a><span>Version 1.0</span></div>
     </div>
     <Routes>
-      <Route  path="/" index element={<App />} />
+      <Route path="/" index element={<App />} />
       <Route path="/filter" element={<Filter />} />
       <Route path="/template" element={<Template />} />
     </Routes>
-  </HashRouter>
+  </React.Fragment>
   );
 }
 export default RoutesLink;
