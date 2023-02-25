@@ -8,6 +8,7 @@ const RoutesLink = () => {
   const location = useLocation();
   const { pathname } = location;
   const splitLocation = pathname.split("/");
+  console.log(splitLocation)
   return (
   <HashRouter>
     <div className="topbar-main">
