@@ -5,12 +5,12 @@ import Template from './Template'
 import Filter from './Filter'
 
 const RoutesLink = () => {
-  const location = useLocation();
+  const location = window.location;
   const { pathname } = location;
+  console.log(pathname)
   const splitLocation = pathname.split("/");
-  console.log(splitLocation)
   return (
-  <React.Fragment>
+  <HashRouter>
     <div className="topbar-main">
       <ul className="navn">
         <li>Advance Filter</li>
@@ -21,11 +21,11 @@ const RoutesLink = () => {
       <div className="logo-branding"><a href="">WP AdvanceFilter</a><span>Version 1.0</span></div>
     </div>
     <Routes>
-      <Route path="/" index element={<App />} />
+      <Route  path="/" index element={<App />} />
       <Route path="/filter" element={<Filter />} />
       <Route path="/template" element={<Template />} />
     </Routes>
-  </React.Fragment>
+  </HashRouter>
   );
 }
 export default RoutesLink;
