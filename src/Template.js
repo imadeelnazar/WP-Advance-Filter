@@ -1,9 +1,8 @@
 import React,{useEffect, useState} from 'react';
 import axios from 'axios';
-import { ReactSortable } from "react-sortablejs";
+import Sortable from './components/Sortable';
 
 import placeholder from './img/placeholder-image.jpg'; // Tell webpack this JS file uses this image
-import Sortable from './components/Sortable';
 
 const Template = () => {
   const [ loader, setLoader ] = useState( 'Save Templates' );
