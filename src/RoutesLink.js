@@ -18,7 +18,7 @@ const RoutesLink = () => {
           <li className={splitLocation[1] === "filter" ? "active" : ""}><Link to={'/filter'} className="nav-link">Filter</Link></li>
           <li className={splitLocation[1] === "template" ? "active" : ""}><Link to={'/template'} className="nav-link">Template</Link></li>
       </ul>
-      <div className="logo-branding"><a href="">WP AdvanceFilter</a><span>Version 1.0</span></div>
+      <div className="logo-branding"><a href="">WP AdvanceFilter ABC</a><span>Version 1.0</span></div>
     </div>
     <Routes>
       <Route  path="/" index element={<App />} />
