@@ -1,0 +1,23 @@
+name: Deploy Webflow site to cPanel server
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Build Webflow site
+        run: npm run build
+      - name: Deploy code to cPanel server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          source: .
+          target: /home/science/public_html/wp-content/plugins/wp-advance-filter
