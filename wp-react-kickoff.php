@@ -43,7 +43,15 @@ if(!is_admin()){
 }
 require_once WPAF_PATH . 'classes/wpaf-ajax-loader.php';
 
-
+/**
+* Enque Scripts
+* @since 1.0
+*/
+function wpaf_enqueue_scripts() {
+    wp_register_script('wpaf-ajaxrequest', WPAF_URL.'asserts/script.js',[ 'jquery' ],'1.0', true);
+    wp_enqueue_script('wpaf-ajaxrequest');
+    // wp_enqueue_style( 'wpaf-ajaxrequest', WPAF_URL . '/asserts/style.css' );  //Font Awesome
+}
 
 
 // add_action('init', 'wp55290310_rewrite_rules');
