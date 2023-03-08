@@ -35,7 +35,7 @@ function load_scripts() {
     ] );
 }
 /**
-* Calling Files
+* Importing Import files
 * @since 1.0
 */
 require_once WPAF_PATH . 'classes/class-create-admin-menu.php';
