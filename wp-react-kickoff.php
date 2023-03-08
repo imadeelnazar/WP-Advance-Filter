@@ -36,7 +36,7 @@ function load_scripts() {
 }
 /**
 * Importing Import files
-* @since 1.0
+* @since 2.0
 */
 require_once WPAF_PATH . 'classes/class-create-admin-menu.php';
 require_once WPAF_PATH . 'classes/class-create-settings-routes.php';
@@ -48,7 +48,7 @@ require_once WPAF_PATH . 'classes/wpaf-ajax-loader.php';
 
 /**
 * Enque Scripts
-* @since 1.0
+* @since 2.0
 */
 function wpaf_enqueue_scripts() {
     wp_register_script('wpaf-ajaxrequest', WPAF_URL.'asserts/script.js',[ 'jquery' ],'1.0', true);
