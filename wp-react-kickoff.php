@@ -34,7 +34,10 @@ function load_scripts() {
         'nonce' => wp_create_nonce( 'wp_rest' ),
     ] );
 }
-
+/**
+* Calling Files
+* @since 1.0
+*/
 require_once WPAF_PATH . 'classes/class-create-admin-menu.php';
 require_once WPAF_PATH . 'classes/class-create-settings-routes.php';
 if(!is_admin()){
