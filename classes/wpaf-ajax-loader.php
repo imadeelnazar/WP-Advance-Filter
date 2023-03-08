@@ -182,7 +182,7 @@ function filter_products_list_callback() {
     }
 }
 
-function wp_custom_pagination($max_num_pages, $args = [], $class = 'pagination',$url) {
+function wp_custom_pagination($max_num_pages, $args = [], $class = 'pagination',$url='') {
 
     global $wp_rewrite;
 
