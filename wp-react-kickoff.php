@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: WP React KickOff
- * Author: Md. Rabiul Islam Robi
- * Author URI: https://github.com/robicse11127
- * Version: 1.0.0
- * Description: WordPress React KickOff.
- * Text-Domain: wp-react-kickoff
+ * Plugin Name: KI Category
+ * Author: WPScience
+ * Author URI: https://WPScience.com
+ * Version: 1.0
+ * Description: KI Category Plugin to Help Filter Posts
+ * Text-Domain: ki-category
  */
 
 if( ! defined( 'ABSPATH' ) ) : exit(); endif; // No direct access allowed.
