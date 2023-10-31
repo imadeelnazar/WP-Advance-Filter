@@ -187,7 +187,6 @@ function wp_custom_pagination($max_num_pages, $args = [], $class = 'pagination',
     global $wp_rewrite;
 
     // Again - hard coded, you should make it dynamic though
-
     $jquery_code = "<script>
     jQuery(document).ready(function($){
         $('.wpaf-page-numbers a').on('click',function(e) {
