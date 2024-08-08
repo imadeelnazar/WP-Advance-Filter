@@ -1,5 +1,5 @@
 module.exports = {
-    entry: "./src/index.js",
+    entry: "./index.js",
     mode: 'development',
     output: {
         path: __dirname,

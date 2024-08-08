@@ -1,8 +1,6 @@
 import React,{useEffect, useState} from 'react';
 import axios from 'axios';
-import Sortable from './components/Sortable';
-
-
+import Sortable from './components/common/FilterSortable';
 
 const Filter = () => {
   const [ loader, setLoader ] = useState( 'Save Filters' );
