@@ -68,11 +68,15 @@
 }
 .wp-category-item-field code {
     background: #f0f0f1;
-    padding: 10px 10px 12px 0px;
+    padding: 0px 10px 0px 10px;
     margin-left: 15px;
     margin-top: 0px !important;
     top: -2px;
+    display: flex;
     position: relative;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
 }
 .wp-category-form-wrap-static code{
 	background:#f0f0f1;
@@ -226,4 +230,47 @@ display: inline-block;
 .wp-category-form-wrap-static .dialog-box[open] .dialog-box-inner{
 	width: 250px;
 	height: 90px;
+}
+.preset-wrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+}
+.wp-category-item-field label span{
+	display:none;
+}
+
+.wp-category-item {
+    display: flex;
+    flex-direction: column;
+}
+.wp-category-item-title .wp-category-item,
+.wp-category-form-wrap-dynamic .wp-category-item{
+	flex-direction: row;
+}
+.wp-category-item textarea {
+    max-width: 300px;
+    margin-top: 14px;
+    min-height: 100px;
+}
+span.error {
+    position: fixed;
+    background: #333;
+    color: #fff;
+    padding: 15px;
+    z-index: 999;
+    top: 0;
+    bottom: 0;
+    height: 100px;
+    width: 400px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
 }

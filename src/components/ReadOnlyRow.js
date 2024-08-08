@@ -25,12 +25,19 @@ const ReadOnlyRow = ({ contact, handleEditClick, handleDeleteClick, handleClickO
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
+
+  let fullName = contact.fullName;
+  // Check if there is a space and replace it with an underscore
+  fullName = fullName.replace(/\s+/g, '_');
+  // Convert the text to lowercase
+  fullName = fullName.toLowerCase();
+
   return (
     <div className="wp-category-form-wrap-static" key={Math.random()}>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.fullName}</div>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.facetType}</div>
         <div onClick={(event) => handleEditClick(event, contact)}>{contact.dataSource}</div>
-        <div><code onClick={handleClickCopy}><input readOnly ref={_ref} type="text" defaultValue={contact.fullName} /></code></div>
+        <div><code onClick={handleClickCopy}><input readOnly ref={_ref} type="text" defaultValue={fullName} /></code></div>
       <div>
         <button className="btn-submit" type="button" onClick={() => handleClickOpen(contact.id)}>
           X

@@ -52,6 +52,10 @@ const App = () => {
   const [ errorMsgWpcfLogic, setErrorMsgWpcfLogic ] = useState( '' );
   const [ errorMsgWpcfSortBy, setErrorMsgWpcfSortBy ] = useState( '' );
 
+  // Method to dismiss error messages
+const dismissError = (setError) => {
+  setError('');
+};
 
  // Use the useState hook to create a state variable 'categories' and the setCategories function to update it.
 const [categories, setCategories] = useState([]);
@@ -146,6 +150,7 @@ useEffect(() => {
     wpcfLogic: "",
     wpcfSortBy: "",
   });
+  const [option, setoption] = useState('link');
 
   // Use the useState hook to create a state variable 'editContactId' and the setEditContactId function to update it
   const [editContactId, setEditContactId] = useState(null);
@@ -157,7 +162,11 @@ useEffect(() => {
       // Get the name and value of the input field that triggered the event
       const fieldName = event.target.getAttribute("name");
       const fieldValue = event.target.value;
+      if (fieldName === 'facetType') {
+        setoption(event.target.value);
+      }
 
+// console.log(fieldName);
       // Create a new object that is a copy of the current form data
       const newFormData = { ...addFormData };
       // Update the value of the field in the new object that corresponds to the input field that triggered the event
@@ -188,52 +197,52 @@ useEffect(() => {
   const handleAddFormSubmit = (event) => {
     event.preventDefault();
 
-    // if(addFormData.fullName === ''){
-    //   setErrorMsgName('Label cannot be left empty!');
-    //   return false;
-    // }
+    if(addFormData.fullName === ''){
+      setErrorMsgName('Label cannot be left empty!');
+      return false;
+    }
     // setErrorMsgName('');
 
-    // if ( addFormData.facetType === '' ){
-    //   setErrorMsgfacetType('Facet Type cannot be left empty!');
-    //   return false;
-    // }
+    if ( addFormData.facetType === '' ){
+      setErrorMsgfacetType('Facet Type cannot be left empty!');
+      return false;
+    }
     // setErrorMsgfacetType('');
 
-    // if(addFormData.dataSource === ''){
-    //   setErrorMsgDataSource('Data Source cannot be left empty!');
-    //   return false;
-    // }
+    if(addFormData.dataSource === ''){
+      setErrorMsgDataSource('Data Source cannot be left empty!');
+      return false;
+    }
     // setErrorMsgDataSource('');
 
-    // if(addFormData.defaultLabel === ''){
-    //   setErrorMsgDefaultLabel('Data Source cannot be left empty!');
-    //   return false;
-    // }
+    if(addFormData.defaultLabel === ''){
+      setErrorMsgDefaultLabel('Data Source cannot be left empty!');
+      return false;
+    }
     // setErrorMsgDefaultLabel('');
 
-    // if(addFormData.valueModifier === ''){
-    //   setErrorMsgValueModifier('Data Source cannot be left empty!');
-    //   return false;
-    // }
+    if(addFormData.valueModifier === ''){
+      setErrorMsgValueModifier('Data Source cannot be left empty!');
+      return false;
+    }
     // setErrorMsgValueModifier('');
 
-    // if(addFormData.postsperpage === ''){
-    //   setErrorMsgpostsperpage('Data Source cannot be left empty!');
-    //   return false;
-    // }
+    if(addFormData.postsperpage === ''){
+      setErrorMsgpostsperpage('Data Source cannot be left empty!');
+      return false;
+    }
     // setErrorMsgpostsperpage('');
 
-    // if(addFormData.wpcfLogic === ''){
-    //   setErrorMsgWpcfLogic('Data Source cannot be left empty!');
-    //   return false;
-    // }
+    if(addFormData.wpcfLogic === ''){
+      setErrorMsgWpcfLogic('Data Source cannot be left empty!');
+      return false;
+    }
     // setErrorMsgWpcfLogic('');
 
-    // if(addFormData.wpcfSortBy === ''){
-    //   setErrorMsgWpcfSortBy('Data Source cannot be left empty!');
-    //   return false;
-    // }
+    if(addFormData.wpcfSortBy === ''){
+      setErrorMsgWpcfSortBy('Data Source cannot be left empty!');
+      return false;
+    }
     // setErrorMsgWpcfSortBy('');
 
     const newContact = {
@@ -325,15 +334,15 @@ const handleDeleteClick = (contactId) => {
       { value: 'cselect', label: 'Dropdown (cSelect)' },
       { value: 'hierarchy', label: 'Hierarchy' },
       { value: 'search', label: 'Search' },
-      { value: 'autocomplete', label: 'Autocomplete' },
-      { value: 'slider', label: 'Slider' },
-      { value: 'date_range', label: 'Date Range' },
-      { value: 'number_range', label: 'Number Range' },
-      { value: 'proximity', label: 'Proximity' },
-      { value: 'radio', label: 'Radio' },
-      { value: 'rating', label: 'Star Rating' },
-      { value: 'pager', label: 'Pager' },
-      { value: 'sort', label: 'Sort' },
+      // { value: 'autocomplete', label: 'Autocomplete' },
+      // { value: 'slider', label: 'Slider' },
+      // { value: 'date_range', label: 'Date Range' },
+      // { value: 'number_range', label: 'Number Range' },
+      // { value: 'proximity', label: 'Proximity' },
+      // { value: 'radio', label: 'Radio' },
+      // { value: 'rating', label: 'Star Rating' },
+      // { value: 'pager', label: 'Pager' },
+      // { value: 'sort', label: 'Sort' }
   ];
 
   return (
@@ -365,6 +374,15 @@ const handleDeleteClick = (contactId) => {
                     handleClickOpen={handleClickOpen}
                     handleCategories={categories}
                     handleDataType={dataType_o}
+                    errorMsgName={errorMsgName}
+                    errorMsgfacetType={errorMsgfacetType}
+                    errorMsgDataSource={errorMsgDataSource}
+                    errorMsgDefaultLabel={errorMsgDefaultLabel}
+                    errorMsgValueModifier={errorMsgValueModifier}
+                    errorMsgpostsperpage={errorMsgpostsperpage}
+                    errorMsgWpcfLogic={errorMsgWpcfLogic}
+                    errorMsgWpcfSortBy={errorMsgWpcfSortBy}
+                    dismissError={dismissError} // Add this prop
                   />
                 ) : (
                   <ReadOnlyRow
@@ -399,6 +417,16 @@ const handleDeleteClick = (contactId) => {
         handleAddFormChange={handleAddFormChange}
         dataType_o={dataType_o}
         categories={categories}
+        selectedOption={option}
+        errorMsgName={errorMsgName}
+        errorMsgfacetType={errorMsgfacetType}
+        errorMsgDataSource={errorMsgDataSource}
+        errorMsgDefaultLabel={errorMsgDefaultLabel}
+        errorMsgValueModifier={errorMsgValueModifier}
+        errorMsgpostsperpage={errorMsgpostsperpage}
+        errorMsgWpcfLogic={errorMsgWpcfLogic}
+        errorMsgWpcfSortBy={errorMsgWpcfSortBy}
+        dismissError={dismissError} // Add this prop
       />
       <strong className="footer-pull-right">Design and Developed by <a href="https://wpscience.com">WPScience</a></strong>
     </div>

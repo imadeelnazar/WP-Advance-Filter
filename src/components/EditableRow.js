@@ -5,7 +5,16 @@ const EditableRow = ({
   editFormData,
   handleEditFormChange,
   handleCategories,
-  handleDataType
+  handleDataType,
+  errorMsgName,
+  errorMsgfacetType,
+  errorMsgDataSource,
+  errorMsgDefaultLabel,
+  errorMsgValueModifier,
+  errorMsgpostsperpage,
+  errorMsgWpcfLogic,
+  errorMsgWpcfSortBy,
+  dismissError
 }) => {
   const [isOpen, setisOpen] = useState(false)
   const _ref = useRef();
@@ -32,6 +41,12 @@ const EditableRow = ({
     return () => clearTimeout(timer);
   }, []);
 
+  let fullName = editFormData.fullName;
+  // Check if there is a space and replace it with an underscore
+  fullName = fullName.replace(/\s+/g, '_');
+  // Convert the text to lowercase
+  fullName = fullName.toLowerCase();
+
   return (
         <div className="wp-category-form-wrap wp-category-form-wrap-dynamic">
           <div className="wp-category-item-field">
@@ -45,7 +60,7 @@ const EditableRow = ({
               value={editFormData.fullName}
               onChange={handleEditFormChange}
             ></input>
-            <code onClick={handleClickCopy}><input readOnly ref={_ref} type="text" defaultValue={editFormData.fullName} /></code>
+            <code onClick={handleClickCopy}><input readOnly ref={_ref} type="text" defaultValue={fullName} /></code>
             </div>
           </div>
           <div className="wp-category-item-field">
