@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, HashRouter, Switch, Route, Link, Routes, useLocation } from 'react-router-dom';
-import App from './App'
-import Template from './Template'
-import Filter from './Filter'
+import App from '../App'
+import Template from '../TemplatePage'
+import Filter from '../FilterPage'
 
 const RoutesLink = () => {
   const location = useLocation();
