@@ -93,9 +93,6 @@ ul.navn {
     padding: 10px 15px;
     margin-bottom: 0;
 }
-.navn li.active a {
-    background: rgba(0, 0, 0, 0.5);
-}
 .navn li a{
     text-decoration: none;
 }
