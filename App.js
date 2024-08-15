@@ -1,11 +1,9 @@
-import React, { useState, Fragment, useEffect, useRef } from "react";
-
+import React, { useState, Fragment, useEffect } from "react";
 import axios from 'axios';
 import { nanoid } from "nanoid";
-import AddNewFilterForm from "./FilterPage";
+import AddNewFilterForm from "./components/forms/FilterForm";
 import ReadOnlyFilterRow from "./components/common/ReadOnlyFilterRow";
 import EditableFilterRow from "./components/common/EditableFilterRow";
-
 
 const App = () => {
   /* Dialog Box Starts*/
@@ -38,34 +36,40 @@ const App = () => {
   const [loader, setLoader] = useState('Save Settings');
   const [addClassEdit, setAddClassEdit] = useState('');
   const [addParentClassEdit, setParentClassEdit] = useState('app-container');
-  const [errorMsgName, setErrorMsgName] = useState('');
-  const [errorMsgFacetType, setErrorMsgFacetType] = useState('');
-  const [errorMsgDataSource, setErrorMsgDataSource] = useState('');
-  const [errorMsgDefaultLabel, setErrorMsgDefaultLabel] = useState('');
-  const [errorMsgValueModifier, setErrorMsgValueModifier] = useState('');
-  const [errorMsgPostsPerPage, setErrorMsgPostsPerPage] = useState('');
-  const [errorMsgWpcfLogic, setErrorMsgWpcfLogic] = useState('');
-  const [errorMsgWpcfSortBy, setErrorMsgWpcfSortBy] = useState('');
+
 
   // Method to dismiss error messages
   const dismissError = (setError) => {
     setError('');
   };
 
-  const [categories, setCategories] = useState([]);
+const [categories, setCategories] = useState([]);
+const [loadingCategories, setLoadingCategories] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(appLocalizer.apiUrl + "/wp/v2/taxonomies");
-        const data = await response.json();
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch(appLocalizer.apiUrl + "/wp/v2/taxonomies");
+      const data = await response.json();
+      console.log('Fetched categories response:', data); // Logging the fetched data to verify structure
+      if (Array.isArray(data)) {
         setCategories(data);
-      } catch (error) {
-        console.error(error);
+      } else if (typeof data === 'object' && data !== null) {
+        // If the data is an object, you might need to get the values from the object
+        setCategories(Object.values(data));
+      } else {
+        setCategories([]);
       }
-    };
-    fetchData();
-  }, []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      setCategories([]);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+  fetchData();
+}, []);
+
 
   const url = `${appLocalizer.apiUrl}/wpaf/v1/settings`;
 
@@ -105,10 +109,37 @@ const App = () => {
     dataSource: "",
     defaultLabel: "",
     valueModifier: "",
+    parentTerm: "",
+    valueModifierItems: "",
+    hierarchical: "",
+    showExpanded: "",
+    showGhosts: "",
+    preserveShowGhosts: "",
+    count: "",
+    emptyCategory: "",
     postsPerPage: "",
     wpcfLogic: "",
     wpcfSortBy: "",
+    facetLogic: ""
   });
+
+  const [errorMsgName, setErrorMsgName] = useState('');
+  const [errorMsgFacetType, setErrorMsgFacetType] = useState('');
+  const [errorMsgDataSource, setErrorMsgDataSource] = useState('');
+  const [errorMsgDefaultLabel, setErrorMsgDefaultLabel] = useState('');
+  const [errorMsgValueModifier, setErrorMsgValueModifier] = useState('');
+  const [errorMsgPostsPerPage, setErrorMsgPostsPerPage] = useState('');
+  const [errorMsgWpcfLogic, setErrorMsgWpcfLogic] = useState('');
+  const [errorMsgWpcfSortBy, setErrorMsgWpcfSortBy] = useState('');
+  const [errorMsgParentTerm, setErrorMsgParentTerm] = useState('');
+  const [errorMsgHierarchical, setErrorMsgHierarchical] = useState('');
+  const [errorMsgShowExpanded, setErrorMsgShowExpanded] = useState('');
+  const [errorMsgShowGhosts, setErrorMsgShowGhosts] = useState('');
+  const [errorMsgPreserveShowGhosts, setErrorMsgPreserveShowGhosts] = useState('');
+  const [errorMsgCount, setErrorMsgCount] = useState('');
+  const [errorMsgEmptyCategory, setErrorMsgEmptyCategory] = useState('');
+  const [errorMsgFacetLogic, setErrorMsgFacetLogic] = useState('');
+
 
   const [editFormData, setEditFormData] = useState({
     fullName: "",
@@ -124,78 +155,249 @@ const App = () => {
   const [option, setOption] = useState('link');
   const [editContactId, setEditContactId] = useState(null);
 
-  const handleAddFormChange = (event) => {
-    event.preventDefault();
-    const fieldName = event.target.getAttribute("name");
-    const fieldValue = event.target.value;
-    if (fieldName === 'facetType') {
-      setOption(event.target.value);
-    }
-    const newFormData = { ...addFormData };
-    newFormData[fieldName] = fieldValue;
-    setAddFormData(newFormData);
-  };
+const handleAddFormChange = (event) => {
+  event.preventDefault();
+  const fieldName = event.target.getAttribute("name");
+  const fieldValue = event.target.value;
+
+  if (fieldName === 'facetType') {
+    setOption(event.target.value);
+  }
+
+  const newFormData = { ...addFormData };
+  newFormData[fieldName] = fieldValue;
+  setAddFormData(newFormData);
+
+  // Clear the respective error message
+  switch (fieldName) {
+    case 'fullName':
+      setErrorMsgName('');
+      break;
+    case 'facetType':
+      setErrorMsgFacetType('');
+      break;
+    case 'dataSource':
+      setErrorMsgDataSource('');
+      break;
+    case 'defaultLabel':
+      setErrorMsgDefaultLabel('');
+      break;
+    case 'valueModifier':
+      setErrorMsgValueModifier('');
+      break;
+    case 'parentTerm':
+      setErrorMsgParentTerm('');
+      break;
+    case 'hierarchical':
+      setErrorMsgHierarchical('');
+      break;
+    case 'showExpanded':
+      setErrorMsgShowExpanded('');
+      break;
+    case 'showGhosts':
+      setErrorMsgShowGhosts('');
+      break;
+    case 'preserveShowGhosts':
+      setErrorMsgPreserveShowGhosts('');
+      break;
+    case 'count':
+      setErrorMsgCount('');
+      break;
+    case 'emptyCategory':
+      setErrorMsgEmptyCategory('');
+      break;
+    case 'postsPerPage':
+      setErrorMsgPostsPerPage('');
+      break;
+    case 'wpcfLogic':
+      setErrorMsgWpcfLogic('');
+      break;
+    case 'wpcfSortBy':
+      setErrorMsgWpcfSortBy('');
+      break;
+    case 'facetLogic':
+      setErrorMsgFacetLogic('');
+      break;
+    default:
+      break;
+  }
+};
+
 
   const handleEditFormChange = (event) => {
-    event.preventDefault();
-    const fieldName = event.target.getAttribute("name");
-    const fieldValue = event.target.value;
-    const newFormData = { ...editFormData };
-    newFormData[fieldName] = fieldValue;
-    setEditFormData(newFormData);
+  event.preventDefault();
+  const fieldName = event.target.getAttribute("name");
+  const fieldValue = event.target.value;
+
+  const newFormData = { ...editFormData };
+  newFormData[fieldName] = fieldValue;
+  setEditFormData(newFormData);
+
+  // Clear the respective error message
+  switch (fieldName) {
+    case 'fullName':
+      setErrorMsgName('');
+      break;
+    case 'facetType':
+      setErrorMsgFacetType('');
+      break;
+    case 'dataSource':
+      setErrorMsgDataSource('');
+      break;
+    case 'defaultLabel':
+      setErrorMsgDefaultLabel('');
+      break;
+    case 'valueModifier':
+      setErrorMsgValueModifier('');
+      break;
+    case 'postsPerPage':
+      setErrorMsgPostsPerPage('');
+      break;
+    case 'wpcfLogic':
+      setErrorMsgWpcfLogic('');
+      break;
+    case 'wpcfSortBy':
+      setErrorMsgWpcfSortBy('');
+      break;
+    default:
+      break;
+  }
+};
+
+
+const handleAddFormSubmit = (event) => {
+  event.preventDefault();
+  let hasError = false;
+
+  if (addFormData.fullName === '') {
+    setErrorMsgName('Label cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgName('');
+  }
+  if (addFormData.facetType === '') {
+    setErrorMsgFacetType('Facet Type cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgFacetType('');
+  }
+  if (addFormData.dataSource === '') {
+    setErrorMsgDataSource('Data Source cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgDataSource('');
+  }
+  if (addFormData.defaultLabel === '') {
+    setErrorMsgDefaultLabel('Default Label cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgDefaultLabel('');
+  }
+  if (addFormData.valueModifier === '') {
+    setErrorMsgValueModifier('Value Modifier cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgValueModifier('');
+  }
+  if (addFormData.parentTerm === '') {
+    setErrorMsgParentTerm('Parent term cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgParentTerm('');
+  }
+  if (addFormData.hierarchical === '') {
+    setErrorMsgHierarchical('Hierarchical cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgHierarchical('');
+  }
+  if (addFormData.showExpanded === '') {
+    setErrorMsgShowExpanded('Show expanded cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgShowExpanded('');
+  }
+  if (addFormData.showGhosts === '') {
+    setErrorMsgShowGhosts('Show ghosts cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgShowGhosts('');
+  }
+  if (addFormData.preserveShowGhosts === '') {
+    setErrorMsgPreserveShowGhosts('Preserve ghost order cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgPreserveShowGhosts('');
+  }
+  if (addFormData.count === '') {
+    setErrorMsgCount('Count cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgCount('');
+  }
+  if (addFormData.emptyCategory === '') {
+    setErrorMsgEmptyCategory('Empty category cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgEmptyCategory('');
+  }
+  if (addFormData.postsPerPage === '') {
+    setErrorMsgPostsPerPage('Posts per Page cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgPostsPerPage('');
+  }
+  if (addFormData.wpcfLogic === '') {
+    setErrorMsgWpcfLogic('WP Query Logic cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgWpcfLogic('');
+  }
+  if (addFormData.wpcfSortBy === '') {
+    setErrorMsgWpcfSortBy('Sort by cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgWpcfSortBy('');
+  }
+  if (addFormData.facetLogic === '') {
+    setErrorMsgFacetLogic('Facet logic cannot be left empty!');
+    hasError = true;
+  } else {
+    setErrorMsgFacetLogic('');
+  }
+
+  // console.log(hasError)
+
+  // if (hasError) {
+  //   return false;
+  // }
+
+  const newContact = {
+    id: nanoid(),
+    fullName: addFormData.fullName,
+    facetType: addFormData.facetType,
+    dataSource: addFormData.dataSource,
+    defaultLabel: addFormData.defaultLabel,
+    valueModifier: addFormData.valueModifier,
+    parentTerm: addFormData.parentTerm,
+    valueModifierItems: addFormData.valueModifierItems,
+    hierarchical: addFormData.hierarchical,
+    showExpanded: addFormData.showExpanded,
+    showGhosts: addFormData.showGhosts,
+    preserveShowGhosts: addFormData.preserveShowGhosts,
+    count: addFormData.count,
+    emptyCategory: addFormData.emptyCategory,
+    postsPerPage: addFormData.postsPerPage,
+    wpcfLogic: addFormData.wpcfLogic,
+    wpcfSortBy: addFormData.wpcfSortBy,
+    facetLogic: addFormData.facetLogic
   };
 
-  const handleAddFormSubmit = (event) => {
-    event.preventDefault();
-    if (addFormData.fullName === '') {
-      setErrorMsgName('Label cannot be left empty!');
-      return false;
-    }
-    if (addFormData.facetType === '') {
-      setErrorMsgFacetType('Facet Type cannot be left empty!');
-      return false;
-    }
-    if (addFormData.dataSource === '') {
-      setErrorMsgDataSource('Data Source cannot be left empty!');
-      return false;
-    }
-    if (addFormData.defaultLabel === '') {
-      setErrorMsgDefaultLabel('Default Label cannot be left empty!');
-      return false;
-    }
-    if (addFormData.valueModifier === '') {
-      setErrorMsgValueModifier('Value Modifier cannot be left empty!');
-      return false;
-    }
-    if (addFormData.postsPerPage === '') {
-      setErrorMsgPostsPerPage('Posts per Page cannot be left empty!');
-      return false;
-    }
-    if (addFormData.wpcfLogic === '') {
-      setErrorMsgWpcfLogic('WP Query Logic cannot be left empty!');
-      return false;
-    }
-    if (addFormData.wpcfSortBy === '') {
-      setErrorMsgWpcfSortBy('Sort by cannot be left empty!');
-      return false;
-    }
+  const newContacts = [...contacts, newContact] || newContact;
+  setContacts(newContacts);
+  setParentClassEdit('app-container savingData');
+};
 
-    const newContact = {
-      id: nanoid(),
-      fullName: addFormData.fullName,
-      facetType: addFormData.facetType,
-      dataSource: addFormData.dataSource,
-      defaultLabel: addFormData.defaultLabel,
-      valueModifier: addFormData.valueModifier,
-      postsPerPage: addFormData.postsPerPage,
-      wpcfLogic: addFormData.wpcfLogic,
-      wpcfSortBy: addFormData.wpcfSortBy,
-    };
-
-    const newContacts = [...contacts, newContact] || newContact;
-    setContacts(newContacts);
-    setParentClassEdit('app-container savingData');
-  };
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
@@ -209,14 +411,31 @@ const App = () => {
   };
 
   const handleEditClick = (event, contact) => {
-    event.preventDefault();
-    setEditContactId(contact.id);
-    setParentClassEdit('app-container updatingData');
-    setAddClassEdit('updateClass');
-    const { fullName, facetType, dataSource, defaultLabel, valueModifier, postsPerPage, wpcfLogic, wpcfSortBy } = contact;
-    const formValues = { fullName, facetType, dataSource, defaultLabel, valueModifier, postsPerPage, wpcfLogic, wpcfSortBy };
-    setEditFormData(formValues);
+  event.preventDefault();
+  setEditContactId(contact.id);
+  setParentClassEdit('app-container updatingData');
+  setAddClassEdit('updateClass');
+
+  // Destructuring all necessary fields from contact
+  const {
+    fullName, facetType, dataSource, defaultLabel, valueModifier,
+    parentTerm, valueModifierItems, hierarchical, showExpanded,
+    showGhosts, preserveShowGhosts, count, emptyCategory,
+    postsPerPage, wpcfLogic, wpcfSortBy, facetLogic
+  } = contact;
+
+  // Creating formValues object with all fields
+  const formValues = {
+    fullName, facetType, dataSource, defaultLabel, valueModifier,
+    parentTerm, valueModifierItems, hierarchical, showExpanded,
+    showGhosts, preserveShowGhosts, count, emptyCategory,
+    postsPerPage, wpcfLogic, wpcfSortBy, facetLogic
   };
+
+  // Setting the form data for editing
+  setEditFormData(formValues);
+};
+
 
   const handleCancelClick = () => {
     setEditContactId(null);
@@ -286,6 +505,14 @@ const App = () => {
                   errorMsgPostsPerPage={errorMsgPostsPerPage}
                   errorMsgWpcfLogic={errorMsgWpcfLogic}
                   errorMsgWpcfSortBy={errorMsgWpcfSortBy}
+                  errorMsgParentTerm={errorMsgParentTerm}
+                  errorMsgHierarchical={errorMsgHierarchical}
+                  errorMsgShowExpanded={errorMsgShowExpanded}
+                  errorMsgShowGhosts={errorMsgShowGhosts}
+                  errorMsgPreserveShowGhosts={errorMsgPreserveShowGhosts}
+                  errorMsgCount={errorMsgCount}
+                  errorMsgEmptyCategory={errorMsgEmptyCategory}
+                  errorMsgFacetLogic={errorMsgFacetLogic}
                   dismissError={dismissError}
                 />
               ) : (
@@ -320,7 +547,7 @@ const App = () => {
         handleAddFormSubmit={handleAddFormSubmit}
         handleAddFormChange={handleAddFormChange}
         dataTypeOptions={dataTypeOptions}
-        categories={categories}
+        handleCategories={categories}
         selectedOption={option}
         errorMsgName={errorMsgName}
         errorMsgFacetType={errorMsgFacetType}
@@ -330,6 +557,14 @@ const App = () => {
         errorMsgPostsPerPage={errorMsgPostsPerPage}
         errorMsgWpcfLogic={errorMsgWpcfLogic}
         errorMsgWpcfSortBy={errorMsgWpcfSortBy}
+        setErrorMsgName={setErrorMsgName}
+        setErrorMsgFacetType={setErrorMsgFacetType}
+        setErrorMsgDataSource={setErrorMsgDataSource}
+        setErrorMsgDefaultLabel={setErrorMsgDefaultLabel}
+        setErrorMsgValueModifier={setErrorMsgValueModifier}
+        setErrorMsgPostsPerPage={setErrorMsgPostsPerPage}
+        setErrorMsgWpcfLogic={setErrorMsgWpcfLogic}
+        setErrorMsgWpcfSortBy={setErrorMsgWpcfSortBy}
         dismissError={dismissError}
       />
       <strong className="footer-pull-right">Designed and Developed by <a href="https://wpscience.com">WPScience</a></strong>

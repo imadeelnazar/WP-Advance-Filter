@@ -1,5 +1,4 @@
 jQuery(document).ready(function($){
-	"use strict";
 
 	$('#wpaf-form').on('submit',function(e) {
 		e.preventDefault(); // Prevent the default action for the form
@@ -25,7 +24,7 @@ jQuery(document).ready(function($){
 					console.log(a, b, c);
 				},
 				success: function(a,b,c){
-					console.log('success',a,b,c);
+					// console.log('success',a,b,c);
 					// Render Results
 
 						// $('.woocommerce-pagination').html(a[2]);
@@ -53,7 +52,7 @@ jQuery(document).ready(function($){
 					console.log(a, b, c);
 				},
 				success: function(a,b,c){
-					console.log('success',a,b,c);
+					console.log('success -ddd',a,b,c);
 					// Render Results
 
 						// $('.woocommerce-pagination').html(a[2]);
@@ -62,10 +61,23 @@ jQuery(document).ready(function($){
 					// Remove WooCommerce Default Pagination
 					$('.woocommerce-pagination').remove();
 					$('.wpaf-pagination-wrap').remove();
+					$('.wc-block-grid__products').html(' ');
+
 
 					// Render Product HTML and Pagination
-					$('.products').html(a[1]);
-					$('.products').parent().append(a[2]);
+					$('.woocommerce-result-count').text(a[0]); // Update the product count text
+					$('.products').html(a[1]); // Render the product HTML
+					$('.wpaf-pagination-wrap').remove(); // Remove any existing pagination
+					$('.woocommerce-pagination').remove(); // Remove existing WooCommerce pagination (if any)
+					$('.products').parent().append(a[2]); // Append the new pagination HTML
+					$('.wc-block-grid__products').append(a[1]); // Append the new pagination HTML
+					// $('.wc-block-grid__products').append(b); // Append the new pagination HTML
+
+					// updateProductList('wc-block-grid__products', 'wc-block-grid__product', b);
+                    // updatePagination(c);
+
+					// Clear any redundant HTML append calls
+					// $('.products').parent().html(''); // Clear the parent container (if needed, adjust as required)
 
 					// $( '.products' ).after( $( '.custom-pagination' ) );
 
@@ -73,6 +85,7 @@ jQuery(document).ready(function($){
 			});
 		}
 	});
+
 
 });
 

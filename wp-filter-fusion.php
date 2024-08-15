@@ -1,15 +1,15 @@
 <?php
 /**
- * Plugin Name: KI Category
+ * Plugin Name: FilterFusion
  * Author: WPScience
  * Author URI: https://WPScience.com
  * Version: 1.0
- * Description: KI Category Plugin to Help Filter Posts
- * Text-Domain: ki-category
+ * Description: FilterFusion Plugin to Help Filter Posts
+ * Text-Domain: filter-fusion
  */
 
 if( ! defined( 'ABSPATH' ) ) : exit(); endif; // No direct access allowed.
-
+unregister_post_type('patterns_ai_data');
 /**
 * Define Plugins Contants
 */

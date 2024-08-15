@@ -1,9 +1,5 @@
 <?php
 
-
-
-
-
 // Add an action for the 'filter_products_list' AJAX request for logged-in users
 add_action( 'wp_ajax_filter_products_list', 'filter_products_list_callback' );
 
@@ -19,51 +15,66 @@ add_action( 'wp_ajax_nopriv_filter_products_list', 'filter_products_list_callbac
 
 function filter_products_list_callback() {
     if( wp_verify_nonce( $_POST['_wpnonce'], 'form-create-nonce' ) ){
-        global $wp_query,$wp;
+        global $wp_query, $wp;
 
-        // get current url with query string.
         $taxonomies = $_POST['option']; // Associative array of taxonomy=>taxonomy term slugs passed from the Ajax call
         $url = $_POST['url']; // Fetch Page URL
         $tax_query = array(); // Initialize an empty array to store taxonomy query
-        $tax_count = 0; // To count the number of taxonomies passed as a relation parameter needs to be passed if there are more than 1
         $post_per_page = 10;
+
         // Default arguments array
         $args = array(
-            'post_type' => $_POST['post_type'],
-            'posts_per_page' => $post_per_page
+            'post_type'      => sanitize_text_field($_POST['post_type']),
+            'posts_per_page' => $post_per_page,
+            'paged'          => 1, // default to page 1
         );
 
         // Loop through the posted taxonomies
-        foreach ($taxonomies as $taxonomy) { // Iterate through the taxonomies
-            if ($taxonomy["value"] != "") { // Only if value is present for taxonomy
-                if($taxonomy["name"] === 'afCategory[]'){
-                    array_push($tax_query, array('taxonomy' => $_POST['taxonomy'], 'field' => 'slug', 'terms' => $taxonomy['value'])); // Push the taxonomy query to the array
-                    if ($tax_count > 0) $tax_query['relation'] = 'AND'; // Add 'relation' parameter if more than one
-                    $tax_count++; // Increment counter
+        foreach ($taxonomies as $taxonomy_data) {
+            if (!empty($taxonomy_data["value"])) {
+                switch ($taxonomy_data["name"]) {
+                    case 'afTaxonomy':
+                        $taxonomy = sanitize_text_field($taxonomy_data["value"]);
+                        break;
+
+                    case 'afCategory':
+                        $category[] = sanitize_text_field($taxonomy_data["value"]);
+                        break;
+
+                    case 'afType':
+                        // Handle afType if needed
+                        break;
                 }
             }
         }
-        if( isset( $_POST['pager'] ) && $_POST['pager'] <> ''){
-            if( is_numeric($_POST['pager']) ){
-                $args['paged'] = $_POST['pager'];
-            }else{
-                // Parse the URL into its components
-                $url = parse_url($_POST['pager_url']);
 
-                $findnumeric_value =  preg_replace("/[^0-9]/", "" , $url);
 
-                $args['paged'] = $findnumeric_value['path'];
-
-            }
-
-        }else{
-            $args['paged'] = (get_query_var('paged'))? get_query_var('paged') : get_query_var('page');
-            $args['paged'] = empty($args['paged'])? 1: $args['paged'];
+        // If taxonomy and category are both set, build the tax_query
+        if (!empty($taxonomy) && !empty($category)) {
+            $tax_query[] = array(
+                'taxonomy' => $taxonomy,
+                'field'    => 'slug',
+                'terms'    => $category,
+            );
         }
 
-        // Add taxonomy query if array is not empty
-        if(!empty($tax_query)) {
+        // Add tax_query to args if it exists
+        if (!empty($tax_query)) {
             $args['tax_query'] = $tax_query;
+        }
+
+        // Handle pagination
+        if (isset($_POST['pager']) && !empty($_POST['pager'])) {
+            if (is_numeric($_POST['pager'])) {
+                $args['paged'] = intval($_POST['pager']);
+            } else {
+                // Extract numeric page value from the URL
+                $parsed_url = parse_url($_POST['pager']);
+                $page_num = preg_replace("/[^0-9]/", '', $parsed_url['path']);
+                $args['paged'] = intval($page_num);
+            }
+        } else {
+            $args['paged'] = max(1, get_query_var('paged') ?: get_query_var('page'));
         }
 
         $woo_posts = new WP_Query($args);
@@ -71,110 +82,70 @@ function filter_products_list_callback() {
         $pagination = ''; // Initialize empty Pagination string
         $total = $woo_posts->found_posts;
         $wpaf_id = '';
-        if ($woo_posts->have_posts()) {
-            if(isset($_POST['taxonomy']) && $_POST['taxonomy'] == 'product_cat' || $_POST['taxonomy'] == 'product_tag'){
-                $class = 'product-cart';
-                $wpaf_id = 'product-cart';
-            }else{
-                $class = 'simple-post';
-                $wpaf_id = 'posts';
-            }
 
+       if ($woo_posts->have_posts()) {
+            $products = array();
+            ob_start();
+
+            // Start the loop
             while ($woo_posts->have_posts()) {
                 $woo_posts->the_post();
-                global $post, $product;
+                global $product;
 
-                $response .= '<li id="'.esc_attr($wpaf_id).'-'.esc_attr(get_the_ID()).'" class="';
-                $allClasses = get_post_class();
-                foreach ($allClasses as $myclass) {
-                    $response .= $myclass . " ";
-                }
-                $response .= '">';
-                if(isset($_POST['taxonomy']) && $_POST['taxonomy'] == 'product_cat' || $_POST['taxonomy'] == 'product_tag'){
+                // Get the template part for the product
+                wc_get_template_part('content', 'product');
 
-                    $thumbnail_id = get_post_thumbnail_id(get_the_ID());
-                    if ( $thumbnail_id ) {
-                        $image = wp_get_attachment_thumb_url( $thumbnail_id );
-                    } else {
-                        $image = wc_placeholder_img_src();
-                    }
-                    $image_info = wp_get_attachment_image_src( get_post_thumbnail_id( $product->get_id() ), 'woocommerce_thumbnail' );
-
-
-
-
-                    $get_templates = get_option('wpaf_templates');
-                    foreach($get_templates as $template){
-                        if(isset($template['type']) && $template['type'] == 'image'){
-                            if ( ! isset( $image_info[0] ) ) {
-                                $response .= sprintf( '<img src="%s" alt="" width="500 height="500" />', wc_placeholder_img_src( 'woocommerce_thumbnail' ) );
-                            }else{
-                                $response .= sprintf('<img data-testid="product-image" alt="%s" src="%s">',$product->get_title(),$image_info[0]);
-                            }
-
-                        }else if(isset($template['type']) && $template['type'] == 'title'){
-                            $response .= '<a href="'.esc_url(get_permalink()).'" class="woocommerce-LoopProduct-link woocommerce-loop-product__link">';
-                            $response .= '<h2 class="woocommerce-loop-product__title">'.esc_html(get_the_title()).'</h2>';
-                            $response .= '</a>';
-                        }else if(isset($template['type']) && $template['type'] == 'readmore'){
-                            $response .=  apply_filters( 'woocommerce_loop_add_to_cart_link',
-                            sprintf( '<a href="%s" rel="nofollow" data-product_id="%s" data-product_sku="%s" class="button wp-element-button %s product_type_%s">Read More</a>',
-                                esc_url( $product->add_to_cart_url() ),
-                                esc_attr( isset( $quantity ) ? $quantity : 1 ),
-                                esc_attr( $product->get_id() ),
-                                esc_attr( $product->get_sku() ),
-                                esc_attr( isset( $class ) ? $class : 'button' ),
-                                esc_html( $product->add_to_cart_text() )
-                            ),
-                            $product );
-                        }
-                    }
-
-                }else{
-                    $response .=  '
-                    <h2 class="wp-block-post-title">
-                        <a href="'.esc_url(get_permalink()).'" target="_self">'.esc_html(get_the_title()).'</a>
-                    </h2>
-                    <div class="wp-block-post-excerpt">
-                        <p class="wp-block-post-excerpt__excerpt">
-                            '.esc_html(get_the_excerpt()).'
-                        </p>
-                    </div>
-                    <hr class="wp-block-separator has-css-opacity">
-                    <div class="wp-block-post-date">
-                        <time datetime="2023-01-06T11:22:21+00:00">'.esc_html(get_the_date('F j, Y')).'</time>
-                    </div>';
-                }
-                $response .=  '</li>';
+                // $products[] = array(
+                //     'title' => get_the_title(),
+                //     'url' => get_permalink(),
+                //     'image' => wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')[0],
+                //     'regular_price' => wc_price($product->get_regular_price()),
+                //     'sale_price' => wc_price($product->get_sale_price())
+                // );
             }
-            //$response .= wpaf_get_pagination($woo_posts->max_num_pages,'',$args['paged'],$current_url);
-            $pagination .= wp_custom_pagination($woo_posts->max_num_pages,$args,'',$url);
+
+            // Pagination HTML
+            // $pagination = paginate_links(array(
+            //     'base' => '%_%',
+            //     'format' => '?page=%#%',
+            //     'current' => max(1, $args['paged']),
+            //     'total' => $woo_posts->max_num_pages,
+            //     'type' => 'array'
+            // ));
+
+            // if ($pagination) {
+            //     foreach ($pagination as $page_link) {
+            //         echo $page_link;
+            //     }
+            // }
+
+            // Get the captured output
+            $response = ob_get_clean();
+
+            // Pagination
+            $pagination = wp_custom_pagination($woo_posts->max_num_pages, $args, '', $url);
+
         } else {
-            if(isset($_POST['taxonomy']) && $_POST['taxonomy'] == 'product_cat' || $_POST['taxonomy'] == 'product_tag'){
-                $response = "No products found.";
-            }else{
-                $response = "No posts found.";
-            }
+            // Handle the case when no products/posts are found
+            $response = isset($_POST['taxonomy']) && in_array($_POST['taxonomy'], array('product_cat', 'product_tag')) ? "No products found." : "No posts found.";
         }
 
+        // Reset post data to ensure global $post is reset after a custom loop
+        wp_reset_postdata();
+
+
         // Top Filtered HTML
-        if ( 1 === intval( $total ) ) {
+        if ($total == 1) {
             $newtag_html = __( 'Showing the single result', 'woocommerce' );
-        } elseif ( $total <= $post_per_page || -1 === $post_per_page ) {
-            /* translators: %d: total results */
+        } elseif ($total <= $post_per_page || $post_per_page == -1) {
             $newtag_html = sprintf( _n( 'Showing all %d result', 'Showing all %d results', $total, 'woocommerce' ), $total );
         } else {
-            $first = ( $post_per_page * $args['paged'] ) - $post_per_page + 1;
-            $last  = min( $total, $post_per_page * $args['paged'] );
-            /* translators: 1: first result 2: last result 3: total results */
+            $first = ($post_per_page * $args['paged']) - $post_per_page + 1;
+            $last  = min($total, $post_per_page * $args['paged']);
             $newtag_html = sprintf( _nx( 'Showing %1$d-%2$d of %3$d result', 'Showing %1$d-%2$d of %3$d results', $total, 'with first and last result', 'woocommerce' ), $first, $last, $total );
         }
 
-
-        $arr = array();
-        $arr[0] = $newtag_html;
-        $arr[1] = $response;
-        $arr[2] = $pagination;
+        $arr = array($newtag_html, $response, $pagination);
 
         echo json_encode($arr);
         wp_reset_postdata();
@@ -264,4 +235,5 @@ add_action( 'wp_ajax_nopriv_afpagination', 'filter_products_list_callback' );
 function afpagination_callback(){
 
 }
+
 

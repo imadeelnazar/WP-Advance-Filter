@@ -2,25 +2,29 @@ import React, {useState, useRef, useEffect} from "react";
 
 const ReadOnlyRow = ({ contact, handleEditClick, handleDeleteClick, handleClickOpen }) => {
   const _ref = useRef();
-  const [open, setisOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const handleClickCopy = (e) => {
     e.preventDefault();
+
+    const textToCopy = `[${_ref.current.value}]`; // Add brackets around the value
+    _ref.current.value = textToCopy; // Temporarily set the value with brackets for copying
     _ref.current.select();
     _ref.current.focus();
+
     if (window.isSecureContext && navigator.clipboard) {
-      navigator.clipboard.writeText(_ref.current.value);
-      setisOpen(true);
+      navigator.clipboard.writeText(textToCopy);
+      setIsOpen(true);
     } else {
       document.execCommand('copy');
-      setisOpen(true);
+      setIsOpen(true);
     }
   }
   const handleClose = () => {
-    setisOpen(false);
+    setIsOpen(false);
   };
   useEffect(() => {
     const timer = setTimeout(() => {
-      setisOpen(false);
+      setIsOpen(false);
       console.log('copied')
     }, 2000);
     return () => clearTimeout(timer);
@@ -43,7 +47,7 @@ const ReadOnlyRow = ({ contact, handleEditClick, handleDeleteClick, handleClickO
           X
         </button>
       </div>
-      <div onClick={handleClose} className="dialog-box" open={open}>
+      <div onClick={handleClose} className="dialog-box" open={isOpen}>
         <div className="dialog-box-inner">
           <h3>Shortcode is copied!</h3>
           <p className="alert-dialog-description">

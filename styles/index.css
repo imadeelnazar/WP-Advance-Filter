@@ -96,3 +96,6 @@ ul.navn {
 .navn li a{
     text-decoration: none;
 }
+.add-new-filter-form{
+    display:none;
+}

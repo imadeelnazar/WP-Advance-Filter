@@ -20,11 +20,7 @@
 .topbar-left div a{
 	margin-right: 10px;
 }
-.add-form > button{
-	padding: 4px 8px;
-    background-color: #f7f7f7;
-    border: 1px solid #ccc;
-}
+
 .edit-form,
 .add-form{
 	padding: 0px 20px 30px;
@@ -124,10 +120,7 @@ strong.footer-pull-right {
 	padding-bottom: 50px;
 	float: left;
 }
-.wp-category-item-field .wp-category-item .error {
-	padding: 5px 10px;
-	margin: 5px 15px 2px;
-}
+
 .wp-category-item-field select,
 .wp-category-item-field input {
 	width: 220px;
@@ -154,6 +147,7 @@ strong.footer-pull-right {
 .btn-submit{
 display: inline-block;
 }
+.btn-submit,
 .cancel-btn,
 .cancel-btn-edit,
 .btn-submit {
@@ -256,21 +250,15 @@ display: inline-block;
     margin-top: 14px;
     min-height: 100px;
 }
-span.error {
-    position: fixed;
-    background: #333;
-    color: #fff;
-    padding: 15px;
-    z-index: 999;
-    top: 0;
-    bottom: 0;
-    height: 100px;
-    width: 400px;
-    left: 0;
-    right: 0;
-    margin: auto;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
+.has-error .wp-category-item input,
+.has-error .wp-category-item textarea,
+.has-error .wp-category-item select{
+  border: 1px solid red;
+  background-color: #ffe6e6;
+}
+.has-error .error {
+  color: red;
+}
+.wp-category-item-inner{
+	display:flex;
 }
